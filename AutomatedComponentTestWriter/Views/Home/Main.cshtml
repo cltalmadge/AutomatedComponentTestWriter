@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Automated Component Test Writer";
+}
+
+<!DOCTYPE html>
+<div class="form-group">
+    <label for="json object">Input JSON object:</label>
+    <textarea id="JSONTextArea" class="form-control"></textarea>
+    <table>
+        <tr>
+            <td>
+                <label class="btn btn-outline-primary" for="fileToLoad">
+                    <input type="file" id="fileToLoad" accept=".JSON" style="display:none">Browse
+                </label>
+            </td>
+            <td><button class="btn btn-primary" onclick="loadFileAsText()">Load Selected File</button></td>
+            <td><button class="btn btn-lg" onclick="JSONtoHTMLFields()">Submit</button></td>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <input type="text" class="form-control" placeholder="Property Name" />
+</div>
+
+<h1 id="testtesttest"></h1>
+
+<script>
+    function loadFileAsText() {
+
+        var printError = function (error, explicit) {
+            console.log(`[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`);
+        }
+        var fileToLoad = document.getElementById("fileToLoad").files[0];
+
+        var fileReader = new FileReader();
+        fileReader.onload = function (fileLoadedEvent) {
+            var textFromFileLoaded = fileLoadedEvent.target.result;
+
+            try {
+                var checkJSONFormatting = textFromFileLoaded;
+                var temp = checkJSONFormatting;
+                checkJSONFormatting = JSON.parse(temp);
+            } catch (e) {
+                if (e instanceof SyntaxError) {
+                    printError(e, true);
+                } else {
+                    printError(e, false);
+                }
+            }
+            document.getElementById("JSONTextArea").value = textFromFileLoaded;
+        };
+        fileReader.readAsText(fileToLoad, "UTF-8");
+    }
+
+
+    function JSONtoHTMLFields() {
+
+        try {
+
+        } catch (e) {
+               
+        }
+    }
+</script>

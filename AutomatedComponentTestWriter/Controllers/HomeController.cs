@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.CodeDom;
 
 namespace AutomatedComponentTestWriter.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Main()
         {
             return View();
         }
