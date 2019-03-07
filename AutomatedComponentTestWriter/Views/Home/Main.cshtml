@@ -21,7 +21,7 @@
     </table>
 </div>
 
-<div id="scum"></div>
+<div id="jsonErrField"></div>
 @*<div>
     <input type="text" class="form-control" placeholder="Property Name" />
 </div>*@
@@ -64,24 +64,26 @@
     function JSONtoHTMLFields() {
 
         var theJSON = document.getElementById("JSONTextArea").value;
-        var syntErr = "<div class=\"alert alert-danger\"><strong>Could not load JSON due to syntax error!</strong></div>";
+        var printError = function (error, explicit) {
+            var err = `[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`;
+            $(document).ready(function () {
+                //alert("butt");
+                $("#jsonErrField").html("<div class=\"alert alert-danger\">" + err + "</div>");
+            });
+        }
         var idToQuery = "#scum";
         try {
             JSON.parse(theJSON);
             $(document).ready(function () {
                 //alert("butt");
-                $("#scum").html("<div class=\"alert alert-success\"><strong>Success!</strong></div");
+                $("#jsonErrField").html("<div class=\"alert alert-success\"><strong>Success!</strong></div");
             });
         } catch (e) {
             if (e instanceof SyntaxError) {
-                //alert("butt");
-                $(document).ready(function () {
-                    //alert("butt");
-                    $("#scum").html("<div class=\"alert alert-danger\"><strong>JSON Load Failed:</strong> Could not load JSON due to syntax error!</div");
-                });
+                printError(e, true);
             }
             else {
-                alert("You're a doof.");
+                printError(e, false);
             }
         }
     }
