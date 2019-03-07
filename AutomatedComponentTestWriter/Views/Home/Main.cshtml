@@ -3,6 +3,8 @@
 }
 
 <!DOCTYPE html>
+
+
 <div class="form-group">
     <label for="json object">Input JSON object:</label>
     <textarea id="JSONTextArea" class="form-control"></textarea>
@@ -13,19 +15,20 @@
                     <input type="file" id="fileToLoad" accept=".JSON" style="display:none">Browse
                 </label>
             </td>
-            <td><button class="btn btn-primary" onclick="loadFileAsText()">Load Selected File</button></td>
+            <td><button id="loadJSON" class="btn btn-primary" onclick="loadFileAsText()">Load Selected File</button></td>
             <td><button class="btn btn-lg" onclick="JSONtoHTMLFields()">Submit</button></td>
         </tr>
     </table>
 </div>
 
-<div>
+<div id="scum"></div>
+@*<div>
     <input type="text" class="form-control" placeholder="Property Name" />
-</div>
+</div>*@
 
-<h1 id="testtesttest"></h1>
 
 <script>
+    
     function loadFileAsText() {
 
         var printError = function (error, explicit) {
@@ -35,7 +38,7 @@
 
         var fileReader = new FileReader();
         fileReader.onload = function (fileLoadedEvent) {
-            var textFromFileLoaded = fileLoadedEvent.target.result;
+        var textFromFileLoaded = fileLoadedEvent.target.result;
 
             try {
                 var checkJSONFormatting = textFromFileLoaded;
@@ -43,9 +46,13 @@
                 checkJSONFormatting = JSON.parse(temp);
             } catch (e) {
                 if (e instanceof SyntaxError) {
-                    printError(e, true);
+                    var syntErr = "<div class=\"alert alert-danger\"><strong>Could not load JSON due to syntax error!</strong></div>";
+                    $('#jsonParseErr').load(syntErr);
+                    //printError(e, true);
                 } else {
-                    printError(e, false);
+                    var syntErr = "<div class=\"alert alert-danger\"><strong>Could not load JSON due to syntax error!</strong></div>";
+                    $('#jsonParseErr').load(syntErr);
+                    //printError(e, false);
                 }
             }
             document.getElementById("JSONTextArea").value = textFromFileLoaded;
@@ -56,10 +63,26 @@
 
     function JSONtoHTMLFields() {
 
+        var theJSON = document.getElementById("JSONTextArea").value;
+        var syntErr = "<div class=\"alert alert-danger\"><strong>Could not load JSON due to syntax error!</strong></div>";
+        var idToQuery = "#scum";
         try {
-
+            JSON.parse(theJSON);
+            $(document).ready(function () {
+                //alert("butt");
+                $("#scum").html("<div class=\"alert alert-success\"><strong>Success!</strong></div");
+            });
         } catch (e) {
-               
+            if (e instanceof SyntaxError) {
+                //alert("butt");
+                $(document).ready(function () {
+                    //alert("butt");
+                    $("#scum").html("<div class=\"alert alert-danger\"><strong>JSON Load Failed:</strong> Could not load JSON due to syntax error!</div");
+                });
+            }
+            else {
+                alert("You're a doof.");
+            }
         }
     }
 </script>
