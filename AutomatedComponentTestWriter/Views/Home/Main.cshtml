@@ -4,7 +4,6 @@
 
 <!DOCTYPE html>
 
-
 <div class="form-group">
     <label for="json object">Input JSON object:</label>
     <textarea id="JSONTextArea" class="form-control"></textarea>
@@ -21,40 +20,21 @@
     </table>
 </div>
 
-<div id="jsonErrField"></div>
-@*<div>
-    <input type="text" class="form-control" placeholder="Property Name" />
-</div>*@
+<div id="jsonErrField"></div> <!--This is where I am putting any error messages regarding JSON parsing after it is submitted to the application.-->
 
+<div id="mainGUI">
+
+</div>
 
 <script>
-    
     function loadFileAsText() {
 
-        var printError = function (error, explicit) {
-            console.log(`[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`);
-        }
         var fileToLoad = document.getElementById("fileToLoad").files[0];
 
         var fileReader = new FileReader();
         fileReader.onload = function (fileLoadedEvent) {
-        var textFromFileLoaded = fileLoadedEvent.target.result;
-
-            try {
-                var checkJSONFormatting = textFromFileLoaded;
-                var temp = checkJSONFormatting;
-                checkJSONFormatting = JSON.parse(temp);
-            } catch (e) {
-                if (e instanceof SyntaxError) {
-                    var syntErr = "<div class=\"alert alert-danger\"><strong>Could not load JSON due to syntax error!</strong></div>";
-                    $('#jsonParseErr').load(syntErr);
-                    //printError(e, true);
-                } else {
-                    var syntErr = "<div class=\"alert alert-danger\"><strong>Could not load JSON due to syntax error!</strong></div>";
-                    $('#jsonParseErr').load(syntErr);
-                    //printError(e, false);
-                }
-            }
+            var textFromFileLoaded = fileLoadedEvent.target.result;
+          
             document.getElementById("JSONTextArea").value = textFromFileLoaded;
         };
         fileReader.readAsText(fileToLoad, "UTF-8");
@@ -68,15 +48,24 @@
             var err = `[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`;
             $(document).ready(function () {
                 //alert("butt");
+
                 $("#jsonErrField").html("<div class=\"alert alert-danger\">" + err + "</div>");
             });
         }
         var idToQuery = "#scum";
         try {
-            JSON.parse(theJSON);
+            var json = JSON.parse(theJSON);
             $(document).ready(function () {
                 //alert("butt");
-                $("#jsonErrField").html("<div class=\"alert alert-success\"><strong>Success!</strong></div");
+                //$("#jsonErrField").html("<div class=\"alert alert-success\"><strong>Success!</strong></div");
+                var htmlString = "<div class=\"scrollbar\">";
+                for (var key in json) {
+                    htmlString += "<div>" + key + " : " + json[key] + "</div>";
+                }
+
+                htmlString += "</div><div><button id=\"Generate\" class =\"btn btn-primary\">Generate</button></div>"
+                $("#mainGUI").html(htmlString);
+                $("#jsonErrField").html("");
             });
         } catch (e) {
             if (e instanceof SyntaxError) {
