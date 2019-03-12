@@ -12,5 +12,13 @@ namespace AutomatedComponentTestWriter.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public JsonResult PostAttribute(Attribute outGoingAttribute)
+        {
+
+            return null;
+        }
+
     }
 }

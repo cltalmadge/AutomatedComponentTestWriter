@@ -1,8 +1,67 @@
-﻿<table>
-    <tr>
-        <th>Property Name</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Default Value</th>
-    </tr>
-</table>
+﻿<form id="ComponentTestObjectData" action="post">
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Post Type</label>
+        <select class="form-control" id="selectAPIAction">
+            <option>Select API Action . . . </option>
+            <option>API POST</option>
+            <option>API PUT</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlInput1">URI/URL</label>
+        <input type="url" class="form-control" id="APIendpointURL" placeholder="www.yourendpoint.com">
+    </div>
+
+    <div id="thePlaceToPutTheThing"></div>
+
+    <table>
+        <tr>
+            <td><input type="text" name="skeeterbaiter" form="my_form" /></td>
+        </tr>
+    </table>
+</form>
+
+
+
+<div id="mainGUI">
+    <div class="form-group">
+        <form>
+            <table>
+                <tr><th>Property Name</th><th>Data Type</th><th>Required</th><th>Default Value</th><th>Yeet</th></tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label>Skeet</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <select class="form-control" id="keyPlusDataType">
+                                <option>Select Data Type</option>
+                                <option>Boolean</option>
+                                <option>DateTime</option>
+                                <option>Decimel</option>
+                                <option>Int</option>
+                                <option>String</option>
+                                <option>Complex</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="checkbox" id="keyPlusRequired">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input class="form-control" id="keyPlusDefaultValue" value="jsonValue" width="40"> <!--These are actually distince. If my key was stringRequired, then it'd be keyRequiredDefaultValue, and the actual value of the box would be json.value-->
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-xs">Preferences</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
