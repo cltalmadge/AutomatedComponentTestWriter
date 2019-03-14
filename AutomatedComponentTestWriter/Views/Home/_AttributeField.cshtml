@@ -11,17 +11,13 @@
         <label for="exampleFormControlInput1">URI/URL</label>
         <input type="url" class="form-control" id="APIendpointURL" placeholder="www.yourendpoint.com">
     </div>
-
     <div id="thePlaceToPutTheThing"></div>
-
     <table>
         <tr>
-            <td><input type="text" name="skeeterbaiter" form="my_form" /></td>
+            <td><input type="text" name="hmm" form="my_form" /></td>
         </tr>
     </table>
 </form>
-
-
 
 <div id="mainGUI">
     <div class="form-group">
@@ -31,7 +27,7 @@
                 <tr>
                     <td>
                         <div class="form-group">
-                            <label>Skeet</label>
+                            <label>Hmmm</label>
                         </div>
                     </td>
                     <td>
@@ -65,27 +61,57 @@
         </form>
     </div>
 </div>
-
 <tr>
-        <td>
-            <div class="form-group"><input class="form-control"></div>
-        </td>
-        <td>
-            <div class="form-group">
-                <select class="form-control">
-                    <option>Select . . .</option>
-                    <option>BadRequest</option>
-                    <option>Unauthorized</option>
-                    <option>NotFound</option>
-                    <option>OK</option>
-                    <option>InternalServerError</option>
-                </select>
+    <td>
+        <div class="form-group"><input class="form-control"></div>
+    </td>
+    <td>
+        <div class="form-group">
+            <select class="form-control">
+                <option>Select . . .</option>
+                <option>BadRequest</option>
+                <option>Unauthorized</option>
+                <option>NotFound</option>
+                <option>OK</option>
+                <option>InternalServerError</option>
+            </select>
+        </div>
+    </td>
+    <td><div class="form-group"><input type="checkbox" name="idRandom" /></div></td>
+    <td><div class="form-group"><input type="checkbox" name="idNull" /></div></td>
+    <td><div class="form-group"><input type="checkbox" name="idBlank" /></div></td>
+    <td><div class="form-group"><input class="form-control" /></div></td>
+    <td><div class="form-group"><input class="form-control" /></div></td>
+    <td><div class="form-group"><button class="btn btn-warning" onclick=deleteRow(this)></button></div></td>
+</tr>
+
+<!-- Button trigger modal -->
+@*<button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalPreview">
+        Launch demo modal
+    </button>*@
+<!-- Modal -->
+@*<div class="modal fade right" id="exampleModalPreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalPreviewLabel">Attribute Preferences</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="ParameterMenu">
+                        <div class="panel-body">
+                            <table id="testTable" class="table table-striped">
+                                <tr><th>Expected Message</th><th>HTTP Response</th><th>Random</th><th>Null</th><th>Blank</th><th>Value/Char Length</th><th>Test Name</th><th><button class="btn btn-success" onclick="addParam('testTable')">+</button></th></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+                </div>
             </div>
-        </td>
-        <td><div class="form-group"><input type="checkbox" name="idRandom" /></div></td>
-        <td><div class="form-group"><input type="checkbox" name="idNull" /></div></td>
-        <td><div class="form-group"><input type="checkbox" name="idBlank" /></div></td>
-        <td><div class="form-group"><input class="form-control" /></div></td>
-        <td><div class="form-group"><input class="form-control" /></div></td>
-        <td><div class="form-group"><button class="btn btn-warning" onclick=deleteRow(this)></button></div></td>
-    </tr>
+        </div>
+    </div>*@
+<!-- Modal -->
