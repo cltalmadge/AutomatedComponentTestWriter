@@ -1,11 +1,12 @@
 ﻿@{
     ViewData["Title"] = "Automated Component Test Writer";
+
+
 }
 
 <!DOCTYPE html>
 
-
-<div class="form-group" style="background-color:transparent">
+<div class="form-group">
     <label for="json object">Input JSON object:</label>
     <textarea id="JSONTextArea" class="form-control" rows="10" cols="10"></textarea>
     <table>
@@ -23,146 +24,42 @@
 
 <div id="jsonErrField"></div> <!--This is where I am putting any error messages regarding JSON parsing after it is submitted to the application.-->
 
-<div id="testMenu"></div>
-<div id="mainGUI" style="background-color:transparent"></div>
+<div id="mainGUI">
+</div>
 
-<script>
-    function loadFileAsText() {
 
-        var fileToLoad = document.getElementById("fileToLoad").files[0];
+<!--Load in the js last.-->
+<script src="~/Scripts/main.js"></script>
 
-        var fileReader = new FileReader();
-        fileReader.onload = function (fileLoadedEvent) {
-            var textFromFileLoaded = fileLoadedEvent.target.result;
-          
-            document.getElementById("JSONTextArea").value = textFromFileLoaded;
-        };
-        fileReader.readAsText(fileToLoad, "UTF-8");
-    }
 
-    function JSONtoHTMLFields2() {
 
-        var theJSON = document.getElementById("JSONTextArea").value;
-        var printError = function (error, explicit) {
-            var err = `[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`;
-            $(document).ready(function () {
-                //alert("butt");
-
-                $("#jsonErrField").html("<div class=\"alert alert-danger\">" + err + "</div>");
-            });
-        }
-        var idToQuery = "#scum";
-        try {
-            var json = JSON.parse(theJSON);
-            $(document).ready(function () {
-                //alert("butt");
-                //$("#jsonErrField").html("<div class=\"alert alert-success\"><strong>Success!</strong></div");
-                var htmlAPIDetails = "<div class=\"form-group\">" +
-                    "<label for=\"exampleFormControlSelect1\">Post Type</label>" +
-                    "<select class=\"form-control\" id=\"selectAPIAction\">" +
-                    "<option>Select API Action . . . </option>" +
-                    "<option>API POST</option>" +
-                    "<option>API PUT</option>" +
-                    "</select>" +
-                    "</div>";
-                var htmlURIURL = "<div class=\"form-group\"><label for=\"exampleFormControlInput1\">URI/URL</label><input type=\"url\" class=\"form-control\" id=\"APIendpointURL\" placeholder=\"www.yourendpoint.com\"></div>";
-                var htmlString = "<div class=\"breadcrumb\">Object Details</div><form id=\"ComponentTestObjectData\" action=\"post\">" + htmlAPIDetails + htmlURIURL + "<div class=\"scrollbar\">";
-                for (var key in json) {
-                    htmlString += "<div class=\"form-group\">" + key + " : " + json[key] + "</div>";
-                }
-
-                htmlString += "</div></div><div><button id=\"Generate\" class =\"btn btn-primary\">Generate</button></div></form>"
-                $("#mainGUI").html(htmlString);
-                $("#jsonErrField").html("");
-            });
-        } catch (e) {
-            if (e instanceof SyntaxError) {
-                printError(e, true);
-            }
-            else {
-                printError(e, false);
-            }
-        }
-    }
-
-    function JSONtoHTMLFields() {
-
-        var theJSON = document.getElementById("JSONTextArea").value;
-        var printError = function (error, explicit) {
-            var err = `[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`;
-            $(document).ready(function () {
-                //alert("butt");
-
-                $("#jsonErrField").html(`<div class="alert alert-danger">" + err + "</div>`);
-            });
-        }
-        var idToQuery = "#scum";
-        try {
-            var json = JSON.parse(theJSON);
-            $(document).ready(function () {
-                //alert("butt");
-                //$("#jsonErrField").html("<div class=\"alert alert-success\"><strong>Success!</strong></div");
-                var htmlAPIDetails = "<div class=\"form-group\">" +
-                                        "<label for=\"exampleFormControlSelect1\">Post Type</label>" +
-                                        "<select class=\"form-control\" id=\"selectAPIAction\">" +
-                                            "<option>Select API Action . . . </option>" +
-                                            "<option>API POST</option>" +
-                                            "<option>API PUT</option>" +
-                                        "</select>" +
-                                     "</div>";
-                var htmlURIURL = "<div class=\"form-group\"><label for=\"exampleFormControlInput1\">URI/URL</label><input type=\"url\" class=\"form-control\" id=\"APIendpointURL\" placeholder=\"www.yourendpoint.com\"></div>";
-                var htmlTableHeader = `<div class="form-group">
-            <table class="table table-striped">
-                <tr><th>Property Name</th><th>Data Type</th><th>Required</th><th>Default Value</th><th></th></tr>`;
-                var htmlString = "<div class=\"breadcrumb\">Object Details</div><form id=\"ComponentTestObjectData\" action=\"post\">" + htmlAPIDetails + htmlURIURL + "<div class=\"scrollbar\"><table>" + htmlTableHeader;
-                for (var key in json) {
-                    //htmlString += "<div class=\"form-group\">" + key + " : " + json[key] + "</div>";
-                    htmlString += `                <tr>
-                    <td>
-                        <div class="form-group">
-                            <label>${key}</label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <select class="form-control" id="${key}DataType">
-                                <option>Select Data Type</option>
-                                <option>Boolean</option>
-                                <option>DateTime</option>
-                                <option>Decimel</option>
-                                <option>Int</option>
-                                <option>String</option>
-                                <option>Complex</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="checkbox" id="${key}Required">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input class="form-control" id="${key}DefaultValue" value="${json[key]}" width="40"> <!--These are actually distince. If my key was stringRequired, then it'd be keyRequiredDefaultValue, and the actual value of the box would be json.value-->
-                        </div>
-                    </td>
-                    <td>
-                        <button class="btn">🖉 Edit Parameters</button>
-                    </td>
-                </tr>`;
-                }
-
-                htmlString += "</div></div><div></div></table><button id=\"Generate\" class =\"btn btn-primary\">Generate</button></form>"
-                $("#mainGUI").html(htmlString);
-                $("#jsonErrField").html("");
-            });
-        } catch (e) {
-            if (e instanceof SyntaxError) {
-                printError(e, true);
-            }
-            else {
-                printError(e, false);
-            }
-        }
-    }
-</script>
+<!-- Button trigger modal -->
+@*<button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalPreview">
+    Launch demo modal
+</button>*@
+<!-- Modal -->
+@*<div class="modal fade right" id="exampleModalPreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalPreviewLabel">Attribute Preferences</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ParameterMenu">
+                    <div class="panel-body">
+                        <table id="testTable" class="table table-striped">
+                            <tr><th>Expected Message</th><th>HTTP Response</th><th>Random</th><th>Null</th><th>Blank</th><th>Value/Char Length</th><th>Test Name</th><th><button class="btn btn-success" onclick="addParam('testTable')">+</button></th></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+<!-- Modal -->
