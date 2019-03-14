@@ -1,11 +1,18 @@
-﻿function deleteRow(btn) {
+﻿
+function deleteRow(btn) {
     var row = btn.parentNode.parentNode;
     row.parentNode.removeChild(row);
 }
 function addParam(tagID) {
+
+    var numRowsInTable = document.getElementById(tagID).rows.length;
+    var newRowNo = 0;
+    if (numRowsInTable > 0)
+        newRowNo = numRowsInTable + 1;
+
     $(document).ready(function () {
-        console.log(`${tagID}`);
-        $(`#${tagID}`).append(`<tr><td><div class="form-group"><input class="form-control"></div></td><td><div class="form-group"><select class="form-control"><option>Select . . .</option><option>BadRequest</option><option>Unauthorized</option><option>NotFound</option><option>OK</option><option>InternalServerError</option></select></div></td><td><div class="form-group"><input type="checkbox" name="idRandom" /></div></td><td><div class="form-group"><input type="checkbox" name="idNull" /></div></td><td><div class="form-group"><input type="checkbox" name="idBlank" /></div></td><td><div class="form-group"><input class="form-control" /></div></td><td><div class="form-group"><input class="form-control" /></div></td><td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">X</button></td></tr>
+        console.log(newRowNo);
+        $(`#${tagID}`).append(`<tr><td><div class="form-group"><input name="${tagID}Parameters_row${newRowNo}_expectedMessage" class= "form-control" ></div ></td > <td><div class="form-group"><select name="${tagID}Parameters_row${newRowNo}_httpResponse" class="form-control"><option>Select . . .</option><option>BadRequest</option><option>Unauthorized</option><option>NotFound</option><option>OK</option><option>InternalServerError</option></select></div></td> <td><div class="form-group"><input name="${tagID}Parameters_row${newRowNo}_checkedRandom" type="checkbox" /></div></td> <td><div class="form-group"><input type="checkbox" name="${tagID}Parameters_row${newRowNo}_checkedNull" /></div></td> <td><div class="form-group"><input type="checkbox" name="${tagID}Parameters_row${newRowNo}_checkedBlank" /></div></td> <td><div class="form-group"><input name="${tagID}Parameters_row${newRowNo}_ValueLength" class="form-control" /></div></td> <td><div class="form-group"><input name="${tagID}Parameters_row${newRowNo}_testName" class="form-control" /></div></td> <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">X</button></td></tr >
         `);
     });
 }
@@ -39,31 +46,37 @@ function JSONtoHTMLFields() {
         var json = JSON.parse(theJSON);
         console.table(json);
         $(document).ready(function () {
-            var htmlAPIDetails = "<div class=\"form-group\">" +
-                "<label for=\"exampleFormControlSelect1\">Post Type</label>" +
-                "<select class=\"form-control\" id=\"selectAPIAction\">" +
-                "<option>Select API Action . . . </option>" +
-                "<option>API POST</option>" +
-                "<option>API PUT</option>" +
-                "</select>" +
-                "</div>";
-            var htmlURIURL = "<div class=\"form-group\"><label for=\"exampleFormControlInput1\">URI/URL</label><input type=\"url\" class=\"form-control\" id=\"APIendpointURL\" placeholder=\"www.yourendpoint.com\"></div>";
-            var htmlTableHeader = `<div class="form-group">
-            <table class="table table-striped">
-                <tr><th>Property Name</th><th>Data Type</th><th>Required</th><th>Default Value</th><th></th></tr>`;
-            var htmlString = `<div class="panel panel-default"><div class="panel-heading">Object Details</div><form id="ComponentTestObjectData" action="post">${htmlAPIDetails}${htmlURIURL}<div class="scrollbar">${htmlTableHeader}<\d`;
+            var htmlString = `<div class="panel panel-default">
+<div class="panel-heading">Object Details</div>
+        <form action="Yeet" method="POST">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Post Type</label>
+                    <select name="APIAction" class="form-control" id="selectAPIAction">
+                        <option>Select API Action . . . </option>
+                        <option>API POST</option>
+                        <option>API PUT</option>
+                    </select>
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">URI/URL</label>
+                        <input name="APIendpointURL" type="url" class="form-control" id="APIendpointURL" placeholder="www.yourendpoint.com">
+                    </div>
+                </div>
+                <div class="scrollbar">
+                    <table class="table table-striped">
+                        <tr><th>Property Name</th><th>Data Type</th><th>Required</th><th>Default Value</th><th></th></tr>`;
+            // For each attribute, iteratively concatenate template strings to table.
             for (var key in json) {
-
                 htmlString += `
                 <tr>
                     <td>
                         <div class="form-group">
-                            <label>${key}</label>
+                            <label name="${key}Label">${key}</label>
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <select class="form-control" id="${key}DataType">
+                            <select name="${key}DataType" class="form-control" id="${key}DataType">
                                 <option>Select Data Type</option>
                                 <option>Boolean</option>
                                 <option>DateTime</option>
@@ -76,21 +89,21 @@ function JSONtoHTMLFields() {
                     </td>
                     <td>
                         <div class="form-group">
-                            <input type="checkbox" id="${key}Required">
+                            <input name="${key}Required" type="checkbox" id="${key}Required">
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <input class="form-control" id="${key}DefaultValue" value="${json[key]}" width="40">
+                            <input name="${key}DefaultValue" class="form-control" id="${key}DefaultValue" value="${json[key]}" width="40">
                         </div>
                     </td>
                     <td>
                         <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#${key}Preferences">🖉 Edit Parameters</button>
-                        <div class="modal fade right" id="${key}Preferences" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+                        <div class="modal fade right" id="${key}Preferences" tabindex="-1" role="dialog" aria-labelledby="${key}PreferencesPreviewLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalPreviewLabel">Attribute Preferences</h5>
+                                        <h5 class="modal-title" id="exampleModalPreviewLabel">Preferences for Property: ${key}</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -112,21 +125,18 @@ function JSONtoHTMLFields() {
                         </div>
                     </td>
                 </tr>`;
-            }
+            } // End for loop iteratively concatenating row info for attributes to table.
 
-            htmlString += `
-                        </div>
-                    </div>
-                <div>
-            </div>
-            <div class="form-group">
-                <label>DTO Name:</label>
-                <input class="form-control">
+            // Lastly, close off divs and the panel.
+            htmlString += `   </table>
+                </div>
             </div>
             <div class="panel-footer">
-            <button class="btn btn-success\">&#9658; Run</button>
+                <label for="dtoName">DTO Name</label><input name="dtoName" class="form-control" />
+                <button class="btn btn-success">&#9658; Run Now</button>
             </div>
-        </div></div></form>`
+        </form>
+    </div>`;
             $("#mainGUI").html(htmlString);
             $("#jsonErrField").html("");
         });

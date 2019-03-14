@@ -15,14 +15,13 @@ namespace AutomatedComponentTestWriter.Controllers
         {
             return View();
         }
-
+        
         [HttpPost]
-        public JsonResult PostAttribute(Attribute outGoingAttribute)
+        public ActionResult Yeet(string APIAction, string APIendpointURL)
         {
-
-            return null;
+            return Content($"Yeah it's a {APIAction} {APIendpointURL}");
         }
-
         //GET Json from text area.
+
     }
 }

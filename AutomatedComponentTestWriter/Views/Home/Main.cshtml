@@ -25,11 +25,38 @@
 <div id="jsonErrField"></div> <!--This is where I am putting any error messages regarding JSON parsing after it is submitted to the application.-->
 
 <div id="mainGUI">
+    @*<div class="panel panel-default">
+        <div class="panel-heading">Object Details</div>
+        <form action="post">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Post Type</label>
+                    <select class="form-control" id="selectAPIAction">
+                        <option>Select API Action . . . </option>
+                        <option>API POST</option>
+                        <option>API PUT</option>
+                    </select>
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">URI/URL</label>
+                        <input type="url" class="form-control" id="APIendpointURL" placeholder="www.yourendpoint.com">
+                    </div>
+                </div>
+                <div class="scrollbar">
+                    <table class="table table-striped">
+                        <tr><th>Property Name</th><th>Data Type</th><th>Required</th><th>Default Value</th><th></th></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <label for="dtoName">DTO Name</label><input name="dtoName" class="form-control" />
+                <button class="btn btn-success">&#9658; Run Now</button>
+            </div>
+        </form>
+    </div>*@
 </div>
 
 
 <!--Load in the js last.-->
 <script src="~/Scripts/main.js"></script>
-
 
 
