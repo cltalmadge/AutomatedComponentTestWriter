@@ -10,7 +10,6 @@ namespace AutomatedComponentTestWriter.Controllers
 {
     public class HomeController : Controller
     {
-
         public ActionResult Main()
         {
             ComponentTestDTO dto = new ComponentTestDTO();
@@ -29,6 +28,12 @@ namespace AutomatedComponentTestWriter.Controllers
             }
             // TODO: Return some kind of action based on processing done to DTO.
             return Content($"1: {dto.Properties.First().PropertyName} 2: {dto.Properties[1].PropertyName} 3: {dto.Properties[2].PropertyName}");
+        }
+
+        [HttpPost]
+        public void currentPropertyIndex(int currentIndex)
+        {
+            ViewBag.CurrentIndex = currentIndex;
         }
     }
 }

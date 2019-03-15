@@ -163,27 +163,90 @@
 </div>
 }
 
+<div style="display:none"><input id="holdPropertyIndex" style="visibility:hidden" value=""/></div>
+
 <!--Load in the js last.-->
 <script src="~/Scripts/main.js">
 
 </script>
 <script>
+    
     function deleteRow(btn) {
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
     }
     function addParam(tagID) {
-        //var string = "" + tagID;
-        //var splitThatBoi = string.split("_");
-        //console.log(splitThatBoi[0]);
+        var string = "" + tagID;
+        var splitTag = string.split("_");
+        var currentProperty = `${splitTag[0]}_${splitTag[1]}_`;
         var numrowsintable = $(`#${tagID}`).children("tr").length;
+        var propertyIndex = splitTag[1];
+        var index = $(`#${tagID}`).children("tr").length;
+        console.log(`Index for Property ${propertyIndex}: ${index}`);
+        
         $(document).ready(function () {
-            console.log(newrowno);
-            $(`#${tagid}`).append(`<tr><td><div class="form-group"><input name="${tagid}parameters_row${newrowno}_expectedmessage" class= "form-control" ></div ></td > <td><div class="form-group"><select name="${tagid}parameters_row${newrowno}_httpresponse" class="form-control"><option>select . . .</option><option>badrequest</option><option>unauthorized</option><option>notfound</option><option>ok</option><option>internalservererror</option></select></div></td> <td><div class="form-group"><input name="${tagid}parameters_row${newrowno}_checkedrandom" type="checkbox" /></div></td> <td><div class="form-group"><input type="checkbox" name="${tagid}parameters_row${newrowno}_checkednull" /></div></td> <td><div class="form-group"><input type="checkbox" name="${tagid}parameters_row${newrowno}_checkedblank" /></div></td> <td><div class="form-group"><input name="${tagid}parameters_row${newrowno}_valuelength" class="form-control" /></div></td> <td><div class="form-group"><input name="${tagid}parameters_row${newrowno}_testname" class="form-control" /></div></td> <td><button type="button" class="btn btn-danger" onclick="deleterow(this)">x</button></td></tr >
-        `);
+            postCurrentPropertyIndex(splitTag[1]);
+            @{ 
+                if(ViewBag.CurrentIndex != null)
+                {
+                    var currentPropertyIndex = ViewBag.CurrentIndex;
+                    Model.Properties[currentPropertyIndex].Parameters.Add(new Parameter());
+                }
+            }
+            var parameter = `<tr><td style="display:none"><input type="hidden" name="properties[${propertyIndex}].Parameters.Index" value="${index}"/></td>
+<td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_Expected_Message" name="Properties[${propertyIndex}].Parameters[${index}].ExpectedMessage" /></td>
+<td><select class="form-control" id="Property_${propertyIndex}_Param_${index}_HTTPResponse" name="Properties[${propertyIndex}].Parameters[${index}].HTTPResponse">
+    <option>Select . . . </option>
+    <option>BadRequest</option>
+    <option>Unauthorized</option>
+    <option>NotFound</option>
+    <option>OK</option>
+    <option>InternalServerError</option>
+</select></td>
+<td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_RandomParam" name="Properties[${ propertyIndex }].Parameters[${ index }].RandomParam" value="False" /></td>
+<td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_NullParam" name="Properties[${propertyIndex}].Parameters[${index }].NullParam" value="False" /></td>
+<td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_BlankParam" name="Properties[${propertyIndex}].Parameters[${index}].BlankParam" value="False" /></td>
+<td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_ValueLength" name="Properties[${propertyIndex}].Parameters[${index}].ValueLength" /></td>
+<td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_TestName" name="Properties[${propertyIndex}].Parameters[${index}].TestName" /></td>
+<td> <button type="button" class="btn btn-danger" onclick="deleterow(this)">x</button></td>
+</tr>`;
+            $(`#${tagID}`).append(parameter);
+        });
+        var numrowsintable = $(`#${tagID}`).children("tr").length;
+        console.log(numrowsintable);
+    }
+
+    function postCurrentPropertyIndex(index) {
+        var theData = `currentIndex=${index}`;
+        $.ajax({
+            type: "post",
+            //contentType: "application/json; charset=utf-8",
+            url: "/Home/currentPropertyIndex",
+            data: theData,
+            success: function (result) {
+                //do something
+                //alert("SUCCESS");
+                console.log(result);
+            },
+            error: function (xmlhttprequest, textstatus, errorthrown) {
+                alert(" conection to the server failed ");
+                console.log("error: " + errorthrown);
+            }
         });
     }
 
+    function fixRowIndexNumbers(table) {
+        // TODO: Loop through DOM tree starting at table and split("_") each child with tag(tr).
+        // IMPORTANT: Put these tags into a multidimensional array!!!!! We will want them later!
+        // Next, put parse splitTag[1] as an int into a js array.
+        var needsToBeFixed = false;
+        // Next loop: Check for sequence breaks. For our midpoints, we just check that currentIndex - (currentIndex - 1) == 1.
+        //            The problem arises when our user has deleted index 0. If intArray[0] != 0... 
+
+        if (needsToBeFixed) {
+            // Solution 1: Iterate through the table starting at the first child element and just...reindex everything.
+        }
+    }
     function JSONtoHTML() {
         console.time('jsonLoadTime');
         var theJSON = document.getElementById("JSONTextArea").value;
@@ -228,13 +291,40 @@
                     var required = `<td><input type="checkbox" id="Properties_${index}_Required" name="Properties[${index}].Required" value="False" /></td>`; 
                     // !! BORKED ^^^^ !!
                     var defaultValue = `<td><input class="form-control" type="text" id="Properties_${index}_DefaultValue" name="Properties[${index}].DefaultValue" value="${json[key]}" /></td>`;
-                    var paramMenu = `<td></td>`;
+                    var paramMenu = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_Preferences">🖉 Edit Parameters</button>
+                                <div class="modal fade right" id="Properties_${index}_Preferences" tabindex="-1" role="dialog" aria-labelledby="Properties_${index}_PreferencesPreviewLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="Properties_${index}_ModalTitle">Preferences for Property: ${key} </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="Properties_${index}_ParameterMenu">
+                                                    <div class="panel-body">
+                                                        <table  class="table table-striped">
+                                                            <tr><th>Expected Message</th><th>HTTP Response</th><th>Random</th><th>Null</th><th>Blank</th><th>Value/Char Length</th><th>Test Name</th><th><button type="button" class="btn btn-success" onclick="addParam('Properties_${index}_ParameterTable')">+ Add Parameter</button></th></tr>
+                                                            <tbody id="Properties_${index}_ParameterTable">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div></td>`;
                     html += `<tr>${indexCell}${propertyName}${dataType}${required}${defaultValue}${paramMenu}</tr>`;
                     index = index + 1;
                 }
                 //var html = `<tr>${propertyName}${dataType}${required}${defaultValue}${paramMenu}</tr>`
                 $("#AttributeTable").html(html);
                 $("#jsonErrField").html("");
+                console.log("Rows: " + $("#AttributeTable").children("tr").length);
             });
         } catch (e) {
             if (e instanceof SyntaxError) {
