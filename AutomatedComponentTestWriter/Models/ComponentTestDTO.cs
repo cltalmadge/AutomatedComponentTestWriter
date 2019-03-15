@@ -21,6 +21,10 @@ namespace AutomatedComponentTestWriter.Models
 
     public class Property
     {
+        public Property()
+        {
+            Parameters = new List<Parameter>();
+        }
         public string PropertyName { get; set; }
         public string DataType { get; set; }
         public bool Required { get; set; }
@@ -31,7 +35,7 @@ namespace AutomatedComponentTestWriter.Models
     public class Parameter
     {
         public string ExpectedMessage { get; set; }
-        public HTTPResponse HTTPCode { get; set; }
+        public string HTTPResponse { get; set; }
         public bool RandomParam { get; set; }
         public bool NullParam { get; set; }
         public bool BlankParam { get; set; }

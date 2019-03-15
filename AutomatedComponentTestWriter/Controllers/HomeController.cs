@@ -18,7 +18,7 @@ namespace AutomatedComponentTestWriter.Controllers
         }
         
         [HttpPost]
-        public ActionResult Yeet(ComponentTestDTO dto)
+        public ActionResult ReadDTO(ComponentTestDTO dto)
         {
             // TODO: Scaffold the component test with the codeDOM here?
 
@@ -28,7 +28,7 @@ namespace AutomatedComponentTestWriter.Controllers
                 // to be generated onto the code?
             }
             // TODO: Return some kind of action based on processing done to DTO.
-            return null;
+            return Content($"{dto.Properties.First().DataType},{dto.APIAction},{dto.Properties.First().Required},{dto.Properties.First().Parameters.First().ExpectedMessage},{dto.Properties.First().Parameters.First().HTTPResponse},{dto.Properties.First().Parameters.First().NullParam},{dto.Properties.First().Parameters.First().BlankParam},{dto.Properties.First().Parameters.First().RandomParam},{dto.Properties.First().Parameters.First().TestName}");
         }
         //GET Json from text area.
 

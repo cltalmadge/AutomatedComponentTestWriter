@@ -1,21 +1,7 @@
 ﻿
-function deleteRow(btn) {
-    var row = btn.parentNode.parentNode;
-    row.parentNode.removeChild(row);
-}
-function addParam(tagID) {
 
-    var numRowsInTable = document.getElementById(tagID).rows.length;
-    var newRowNo = 0;
-    if (numRowsInTable > 0)
-        newRowNo = numRowsInTable + 1;
 
-    $(document).ready(function () {
-        console.log(newRowNo);
-        $(`#${tagID}`).append(`<tr><td><div class="form-group"><input name="${tagID}Parameters_row${newRowNo}_expectedMessage" class= "form-control" ></div ></td > <td><div class="form-group"><select name="${tagID}Parameters_row${newRowNo}_httpResponse" class="form-control"><option>Select . . .</option><option>BadRequest</option><option>Unauthorized</option><option>NotFound</option><option>OK</option><option>InternalServerError</option></select></div></td> <td><div class="form-group"><input name="${tagID}Parameters_row${newRowNo}_checkedRandom" type="checkbox" /></div></td> <td><div class="form-group"><input type="checkbox" name="${tagID}Parameters_row${newRowNo}_checkedNull" /></div></td> <td><div class="form-group"><input type="checkbox" name="${tagID}Parameters_row${newRowNo}_checkedBlank" /></div></td> <td><div class="form-group"><input name="${tagID}Parameters_row${newRowNo}_ValueLength" class="form-control" /></div></td> <td><div class="form-group"><input name="${tagID}Parameters_row${newRowNo}_testName" class="form-control" /></div></td> <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">X</button></td></tr >
-        `);
-    });
-}
+
 function loadFileAsText() {
 
     var fileToLoad = document.getElementById("fileToLoad").files[0];

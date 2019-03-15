@@ -22,7 +22,7 @@
     </table>
 </div>
 <div id="jsonErrField"></div> <!--This is where I am putting any error messages regarding JSON parsing after it is submitted to the application.-->
-@using (Html.BeginForm())
+@using (Html.BeginForm("ReadDTO", "Home"))
 {
 <div id="mainGUI">
     <div class="panel panel-default">
@@ -42,13 +42,99 @@
                         <th>Default Value</th>
                         <th></th>
                     </tr>
+                    @{ 
+                        Model.Properties.Add(new Property());
+                        Model.Properties.ElementAt(0).Parameters.Add(new Parameter());
+                    }
                     <tbody id="AttributeTable">
-                        <tr></tr>
+                        <tr>
+                            <td style="display:none"><input type="hidden" name="Properties.Index" value="0" /></td>
+                            <td><label id="Properties_0_PropertyName" name="Properties[0].PropertyName">TestProperty</label></td>
+                            <td>
+                                <select class="form-control" id="Properties_0_DataType" name="Properties[0].DataType">
+                                    <option>Select Type . . .</option>
+                                    <option>string</option>
+                                    <option>bool</option>
+                                    <option>int</option>
+                                    <option>decimel</option>
+                                    <option>DateTime</option>
+                                    <option>Complex</option>
+                                </select>
+                            </td>
+                            <td>@Html.CheckBoxFor(model => model.Properties[0].Required)
+                                @*<input type="checkbox" id="Properties_0_Required" name="Properties[0].Required" />*@</td>
+                            <td><input class="form-control" type="text" id="Properties_0_DefaultValue" name="Properties[0].DefaultValue" /></td>
+                            <td>
+                                <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_0_Preferences">🖉 Edit Parameters</button>
+                                <div class="modal fade right" id="Properties_0_Preferences" tabindex="-1" role="dialog" aria-labelledby="Properties_0_PreferencesPreviewLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalPreviewLabel">Preferences for Property: </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="ParameterMenu">
+                                                    <div class="panel-body">
+                                                        <table  class="table table-striped">
+                                                            <tr><th>Expected Message</th><th>HTTP Response</th><th>Random</th><th>Null</th><th>Blank</th><th>Value/Char Length</th><th>Test Name</th><th><button type="button" class="btn btn-success" onclick="addParam('Properties_0_ParameterTable')">+ Add Parameter</button></th></tr>
+                                                            <tbody id="Properties_0_ParameterTable">
+                                                                <tr>
+                                                                    <td style="display:none">
+                                                                        <input type="hidden" name="Properties[0].Attributes.Index" value="0" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input class="form-control" type="text" id="Property_0_Param_0_Expected_message" name="Properties[0].Parameters[0].ExpectedMessage" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <select class="form-control" id="Property_0_Param_0_HTTPResponse" name="Properties[0].Parameters[0].HTTPResponse">
+                                                                            <option>Select . . . </option>
+                                                                            <option>BadRequest</option>
+                                                                            <option>Unauthorized</option>
+                                                                            <option>NotFound</option>
+                                                                            <option>OK</option>
+                                                                            <option>InternalServerError</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.CheckBoxFor(model => model.Properties[0].Parameters[0].RandomParam)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.CheckBoxFor(model => model.Properties[0].Parameters[0].NullParam)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.CheckBoxFor(model => model.Properties[0].Parameters[0].BlankParam)
+                                                                    </td>
+                                                                    <td>
+                                                                        <input class="form-control" type="text" id="Property_0_Param_0_ValueLength" name="Properties[0].Parameters[0].ValueLength" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input class="form-control" type="text" id="Property_0_Param_0_TestName" name="Properties[0].Parameters[0].TestName" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-danger" onclick="deleterow(this)">x</button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="panel-footer">DTO Info is gonna go here</div>
+        <div class="panel-footer"><input type="submit" value="Heck"/></div>
     </div>
     @*<div class="panel panel-default">
             <div class="panel-heading">Object Details</div>
@@ -83,51 +169,70 @@
 
 <!--Load in the js last.-->
 <script src="~/Scripts/main.js">
-    function JSONtoHTML() {
-        console.time('jsonLoadTime');
-        var theJSON = document.getElementById("JSONTextArea").value;
-        var printError = function (error, explicit) {
-            var err = `[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`;
-            $(document).ready(function () {
-                //alert("butt");
 
-                $("#jsonErrField").html(`<div class="alert alert-danger">"${err}"</div>`);
-            });
-        }
-
-        try {
-            var json = JSON.parse(theJSON);
-            console.table(json);
-            $(document).ready(function () {
-                var html = "";
-                //var index = 
-
-                for (var key in json) {
-
-                    @* For every key:value in my json, add a new property to my list *@
-                    @{ 
-                        Model.Properties.Add(new Property());
-                    }
-
-                    var propertyName;
-                    var dataType;
-                    var required;
-                    var defaultValue;
-                    var paramMenu;
-                }
-                var html = `<tr>${propertyName}${dataType}${required}${defaultValue}${paramMenu}</tr>`
-                $("#mainGUI").html(htmlString);
-                $("#jsonErrField").html("");
-            });
-        } catch (e) {
-            if (e instanceof SyntaxError) {
-                printError(e, true);
-            }
-            else {
-                printError(e, false);
-            }
-        }
-        console.timeEnd('jsonLoadTime');
+    function deleteRow(btn) {
+        var row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
     }
+    function addParam(tagID) {
+        @{ 
+            Model.Properties[0].Parameters.Add(new Parameter());
+        }
+        //var string = "" + tagID;
+        //var splitThatBoi = string.split("_");
+        //console.log(splitThatBoi[0]);
+        var numrowsintable = $(`#${tagID}`).children("tr").length;
+        $(document).ready(function () {
+            console.log(newrowno);
+            $(`#${tagid}`).append(`<tr><td><div class="form-group"><input name="${tagid}parameters_row${newrowno}_expectedmessage" class= "form-control" ></div ></td > <td><div class="form-group"><select name="${tagid}parameters_row${newrowno}_httpresponse" class="form-control"><option>select . . .</option><option>badrequest</option><option>unauthorized</option><option>notfound</option><option>ok</option><option>internalservererror</option></select></div></td> <td><div class="form-group"><input name="${tagid}parameters_row${newrowno}_checkedrandom" type="checkbox" /></div></td> <td><div class="form-group"><input type="checkbox" name="${tagid}parameters_row${newrowno}_checkednull" /></div></td> <td><div class="form-group"><input type="checkbox" name="${tagid}parameters_row${newrowno}_checkedblank" /></div></td> <td><div class="form-group"><input name="${tagid}parameters_row${newrowno}_valuelength" class="form-control" /></div></td> <td><div class="form-group"><input name="${tagid}parameters_row${newrowno}_testname" class="form-control" /></div></td> <td><button type="button" class="btn btn-danger" onclick="deleterow(this)">x</button></td></tr >
+        `);
+        });
+    }
+
+    function JSONtoHTML() {
+    console.time('jsonLoadTime');
+    var theJSON = document.getElementById("JSONTextArea").value;
+    var printError = function (error, explicit) {
+        var err = `[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`;
+        $(document).ready(function () {
+            $("#jsonErrField").html(`<div class="alert alert-danger">"${err}"</div>`);
+        });
+    }
+
+    try {
+        var json = JSON.parse(theJSON);
+        console.table(json);
+        $(document).ready(function () {
+            var html = "";
+            //var index = 
+
+            for (var key in json) {
+
+                @* For every key:value in my json, add a new property to my list *@
+                @{ 
+                    Model.Properties.Add(new Property());
+                }
+                var index = $("#AttributeTable").children("tr").length;
+                var indexCell = `<td style="display:none"><input name="Properties.Index" type="hidden" value="${index}" /></td>`;
+                var propertyName = `<td><label id="Properties_${index}_PropertyName" name="Properties[${index}].PropertyName">${key}</label></td>`;
+                var dataType;
+                var required;
+                var defaultValue;
+                var paramMenu;
+            }
+            var html = `<tr>${propertyName}${dataType}${required}${defaultValue}${paramMenu}</tr>`
+            $("#mainGUI").html(htmlString);
+            $("#jsonErrField").html("");
+        });
+    } catch (e) {
+        if (e instanceof SyntaxError) {
+            printError(e, true);
+        }
+        else {
+            printError(e, false);
+        }
+    }
+    console.timeEnd('jsonLoadTime');
+}
 </script>
 
