@@ -43,123 +43,12 @@
                         <th></th>
                     </tr>
                     <tbody id="AttributeTable">
-                        @*<tr>
-                            <td style="display:none"><input type="hidden" name="Properties.Index" value="0" /></td>
-                            <td><label id="Properties_0_PropertyName" name="Properties[0].PropertyName">TestProperty</label></td>
-                            <td>
-                                <select class="form-control" id="Properties_0_DataType" name="Properties[0].DataType">
-                                    <option>Select Type . . .</option>
-                                    <option>string</option>
-                                    <option>bool</option>
-                                    <option>int</option>
-                                    <option>decimel</option>
-                                    <option>DateTime</option>
-                                    <option>Complex</option>
-                                </select>
-                            </td>
-                            <td>
-                               </td>
-                            <td><input class="form-control" type="text" id="Properties_0_DefaultValue" name="Properties[0].DefaultValue" /></td>
-                            <td>
-                                <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_0_Preferences">🖉 Edit Parameters</button>
-                                <div class="modal fade right" id="Properties_0_Preferences" tabindex="-1" role="dialog" aria-labelledby="Properties_0_PreferencesPreviewLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalPreviewLabel">Preferences for Property: </h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div id="ParameterMenu">
-                                                    <div class="panel-body">
-                                                        <table  class="table table-striped">
-                                                            <tr><th>Expected Message</th><th>HTTP Response</th><th>Random</th><th>Null</th><th>Blank</th><th>Value/Char Length</th><th>Test Name</th><th><button type="button" class="btn btn-success" onclick="addParam('Properties_0_ParameterTable')">+ Add Parameter</button></th></tr>
-                                                            <tbody id="Properties_0_ParameterTable">
-                                                                <tr>
-                                                                    <td style="display:none">
-                                                                        <input type="hidden" name="Properties[0].Attributes.Index" value="0" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <input class="form-control" type="text" id="Property_0_Param_0_Expected_message" name="Properties[0].Parameters[0].ExpectedMessage" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <select class="form-control" id="Property_0_Param_0_HTTPResponse" name="Properties[0].Parameters[0].HTTPResponse">
-                                                                            <option>Select . . . </option>
-                                                                            <option>BadRequest</option>
-                                                                            <option>Unauthorized</option>
-                                                                            <option>NotFound</option>
-                                                                            <option>OK</option>
-                                                                            <option>InternalServerError</option>
-                                                                        </select>
-                                                                    </td>
-                                                                    <td>
-                                                                        
-                                                                    </td>
-                                                                    <td>
-                                                                        
-                                                                    </td>
-                                                                    <td>
-                                                                        
-                                                                    </td>
-                                                                    <td>
-                                                                        <input class="form-control" type="text" id="Property_0_Param_0_ValueLength" name="Properties[0].Parameters[0].ValueLength" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <input class="form-control" type="text" id="Property_0_Param_0_TestName" name="Properties[0].Parameters[0].TestName" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <button type="button" class="btn btn-danger" onclick="deleterow(this)">x</button>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>*@
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="panel-footer"><input type="submit" value="Heck"/></div>
     </div>
-    @*<div class="panel panel-default">
-            <div class="panel-heading">Object Details</div>
-            <form action="post">
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="exampleFormControlSelect1">Post Type</label>
-                        <select class="form-control" id="selectAPIAction">
-                            <option>Select API Action . . . </option>
-                            <option>API POST</option>
-                            <option>API PUT</option>
-                        </select>
-                        <div class="form-group">
-                            <label for="exampleFormControlInput1">URI/URL</label>
-                            <input type="url" class="form-control" id="APIendpointURL" placeholder="www.yourendpoint.com">
-                        </div>
-                    </div>
-                    <div class="scrollbar">
-                        <table class="table table-striped">
-                            <tr><th>Property Name</th><th>Data Type</th><th>Required</th><th>Default Value</th><th></th></tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="panel-footer">
-                    <label for="dtoName">DTO Name</label><input name="dtoName" class="form-control" />
-                    <button class="btn btn-success">&#9658; Run Now</button>
-                </div>
-            </form>
-        </div>*@
 </div>
 }
 
@@ -194,22 +83,22 @@
                 }
             }
             var parameter = `<tr><td style="display:none"><input type="hidden" name="properties[${propertyIndex}].Parameters.Index" value="${index}"/></td>
-<td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_Expected_Message" name="Properties[${propertyIndex}].Parameters[${index}].ExpectedMessage" /></td>
-<td><select class="form-control" id="Property_${propertyIndex}_Param_${index}_HTTPResponse" name="Properties[${propertyIndex}].Parameters[${index}].HTTPResponse">
-    <option>Select . . . </option>
-    <option>BadRequest</option>
-    <option>Unauthorized</option>
-    <option>NotFound</option>
-    <option>OK</option>
-    <option>InternalServerError</option>
-</select></td>
-<td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_RandomParam" name="Properties[${ propertyIndex }].Parameters[${ index }].RandomParam" value="False" /></td>
-<td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_NullParam" name="Properties[${propertyIndex}].Parameters[${index }].NullParam" value="False" /></td>
-<td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_BlankParam" name="Properties[${propertyIndex}].Parameters[${index}].BlankParam" value="False" /></td>
-<td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_ValueLength" name="Properties[${propertyIndex}].Parameters[${index}].ValueLength" /></td>
-<td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_TestName" name="Properties[${propertyIndex}].Parameters[${index}].TestName" /></td>
-<td> <button type="button" class="btn btn-danger" onclick="deleterow(this)">x</button></td>
-</tr>`;
+                            <td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_Expected_Message" name="Properties[${propertyIndex}].Parameters[${index}].ExpectedMessage" /></td>
+                            <td><select class="form-control" id="Property_${propertyIndex}_Param_${index}_HTTPResponse" name="Properties[${propertyIndex}].Parameters[${index}].HTTPResponse">
+                                <option>Select . . . </option>
+                                <option>BadRequest</option>
+                                <option>Unauthorized</option>
+                                <option>NotFound</option>
+                                <option>OK</option>
+                                <option>InternalServerError</option>
+                            </select></td>
+                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_RandomParam" name="Properties[${ propertyIndex }].Parameters[${ index }].RandomParam" value="1" /></td>
+                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_NullParam" name="Properties[${propertyIndex}].Parameters[${index }].NullParam" value="1" /></td>
+                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_BlankParam" name="Properties[${propertyIndex}].Parameters[${index}].BlankParam" value="1" /></td>
+                            <td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_ValueLength" name="Properties[${propertyIndex}].Parameters[${index}].ValueLength" /></td>
+                            <td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_TestName" name="Properties[${propertyIndex}].Parameters[${index}].TestName" /></td>
+                            <td> <button type="button" class="btn btn-danger" onclick="deleteRow(this)">x</button></td>
+                            </tr>`;
             $(`#${tagID}`).append(parameter);
         });
         var numrowsintable = $(`#${tagID}`).children("tr").length;
@@ -287,9 +176,7 @@
                                         <option>DateTime</option>
                                         <option>Complex</option>
                                     </select></td>`;
-                    // THIS IS BROKEN
-                    var required = `<td><input type="checkbox" id="Properties_${index}_Required" name="Properties[${index}].Required" value="False" /></td>`; 
-                    // !! BORKED ^^^^ !!
+                    var required = `<td><input type="checkbox" id="Properties_${index}_Required" name="Properties[${index}].Required" value="1" /></td>`;
                     var defaultValue = `<td><input class="form-control" type="text" id="Properties_${index}_DefaultValue" name="Properties[${index}].DefaultValue" value="${json[key]}" /></td>`;
                     var paramMenu = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_Preferences">🖉 Edit Parameters</button>
                                 <div class="modal fade right" id="Properties_${index}_Preferences" tabindex="-1" role="dialog" aria-labelledby="Properties_${index}_PreferencesPreviewLabel" aria-hidden="true">

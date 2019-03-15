@@ -27,7 +27,7 @@ namespace AutomatedComponentTestWriter.Models
         }
         public string PropertyName { get; set; }
         public string DataType { get; set; }
-        public bool Required { get; set; }
+        public string Required { get; set; }
         public string DefaultValue { get; set; }
         public List<Parameter> Parameters { get; set; }
     }
@@ -36,9 +36,9 @@ namespace AutomatedComponentTestWriter.Models
     {
         public string ExpectedMessage { get; set; }
         public string HTTPResponse { get; set; }
-        public bool RandomParam { get; set; }
-        public bool NullParam { get; set; }
-        public bool BlankParam { get; set; }
+        public string RandomParam { get; set; }
+        public string NullParam { get; set; }
+        public string BlankParam { get; set; }
         public string ValueLength { get; set; }
         public string TestName { get; set; }
     }
