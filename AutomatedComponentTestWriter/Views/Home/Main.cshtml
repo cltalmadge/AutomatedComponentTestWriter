@@ -1,11 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Automated Component Test Writer";
 
-
 }
-
+@using System.Linq
+@using AutomatedComponentTestWriter.Models
+@model AutomatedComponentTestWriter.Models.ComponentTestDTO
 <!DOCTYPE html>
-
 <div class="form-group">
     <label for="json object">Input JSON object:</label>
     <textarea id="JSONTextArea" class="form-control" rows="10" cols="10"></textarea>
@@ -21,42 +21,113 @@
         </tr>
     </table>
 </div>
-
 <div id="jsonErrField"></div> <!--This is where I am putting any error messages regarding JSON parsing after it is submitted to the application.-->
-
+@using (Html.BeginForm())
+{
 <div id="mainGUI">
+    <div class="panel panel-default">
+        <div class="panel-heading"><strong>Object Details</strong></div>
+        <label>API Action:</label>@Html.DropDownListFor(model => model.APIAction,
+                                                    new SelectList(Enum.GetValues(typeof(APIAction))),
+                                                    "Select API Action . . . ",
+                                                    new { @class = "form-control"})
+        <label>URI/URL:</label>@Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control"}) 
+        <div class="panel-body">
+            <div class="scrollbar">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Property Name</th>
+                        <th>Data Type</th>
+                        <th>Required</th>
+                        <th>Default Value</th>
+                        <th></th>
+                    </tr>
+                    <tbody id="AttributeTable">
+                        <tr></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">DTO Info is gonna go here</div>
+    </div>
     @*<div class="panel panel-default">
-        <div class="panel-heading">Object Details</div>
-        <form action="post">
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="exampleFormControlSelect1">Post Type</label>
-                    <select class="form-control" id="selectAPIAction">
-                        <option>Select API Action . . . </option>
-                        <option>API POST</option>
-                        <option>API PUT</option>
-                    </select>
+            <div class="panel-heading">Object Details</div>
+            <form action="post">
+                <div class="panel-body">
                     <div class="form-group">
-                        <label for="exampleFormControlInput1">URI/URL</label>
-                        <input type="url" class="form-control" id="APIendpointURL" placeholder="www.yourendpoint.com">
+                        <label for="exampleFormControlSelect1">Post Type</label>
+                        <select class="form-control" id="selectAPIAction">
+                            <option>Select API Action . . . </option>
+                            <option>API POST</option>
+                            <option>API PUT</option>
+                        </select>
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">URI/URL</label>
+                            <input type="url" class="form-control" id="APIendpointURL" placeholder="www.yourendpoint.com">
+                        </div>
+                    </div>
+                    <div class="scrollbar">
+                        <table class="table table-striped">
+                            <tr><th>Property Name</th><th>Data Type</th><th>Required</th><th>Default Value</th><th></th></tr>
+                        </table>
                     </div>
                 </div>
-                <div class="scrollbar">
-                    <table class="table table-striped">
-                        <tr><th>Property Name</th><th>Data Type</th><th>Required</th><th>Default Value</th><th></th></tr>
-                    </table>
+                <div class="panel-footer">
+                    <label for="dtoName">DTO Name</label><input name="dtoName" class="form-control" />
+                    <button class="btn btn-success">&#9658; Run Now</button>
                 </div>
-            </div>
-            <div class="panel-footer">
-                <label for="dtoName">DTO Name</label><input name="dtoName" class="form-control" />
-                <button class="btn btn-success">&#9658; Run Now</button>
-            </div>
-        </form>
-    </div>*@
+            </form>
+        </div>*@
 </div>
-
+}
 
 <!--Load in the js last.-->
-<script src="~/Scripts/main.js"></script>
+<script src="~/Scripts/main.js">
+    function JSONtoHTML() {
+        console.time('jsonLoadTime');
+        var theJSON = document.getElementById("JSONTextArea").value;
+        var printError = function (error, explicit) {
+            var err = `[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`;
+            $(document).ready(function () {
+                //alert("butt");
 
+                $("#jsonErrField").html(`<div class="alert alert-danger">"${err}"</div>`);
+            });
+        }
+
+        try {
+            var json = JSON.parse(theJSON);
+            console.table(json);
+            $(document).ready(function () {
+                var html = "";
+                //var index = 
+
+                for (var key in json) {
+
+                    @* For every key:value in my json, add a new property to my list *@
+                    @{ 
+                        Model.Properties.Add(new Property());
+                    }
+
+                    var propertyName;
+                    var dataType;
+                    var required;
+                    var defaultValue;
+                    var paramMenu;
+                }
+                var html = `<tr>${propertyName}${dataType}${required}${defaultValue}${paramMenu}</tr>`
+                $("#mainGUI").html(htmlString);
+                $("#jsonErrField").html("");
+            });
+        } catch (e) {
+            if (e instanceof SyntaxError) {
+                printError(e, true);
+            }
+            else {
+                printError(e, false);
+            }
+        }
+        console.timeEnd('jsonLoadTime');
+    }
+</script>
 

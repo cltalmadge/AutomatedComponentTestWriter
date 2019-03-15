@@ -5,7 +5,52 @@ using System.Web;
 
 namespace AutomatedComponentTestWriter.Models
 {
+
+
     public class ComponentTestDTO
     {
+        public ComponentTestDTO()
+        {
+            Properties = new List<Property>();
+        }
+        public APIAction APIAction { get; set; }
+        public string APIEndpointURL { get; set; }
+        public string DTOName { get; set; }
+        public List<Property> Properties { get; set; }
+    }
+
+    public class Property
+    {
+        public string PropertyName { get; set; }
+        public string DataType { get; set; }
+        public bool Required { get; set; }
+        public string DefaultValue { get; set; }
+        public List<Parameter> Parameters { get; set; }
+    }
+
+    public class Parameter
+    {
+        public string ExpectedMessage { get; set; }
+        public HTTPResponse HTTPCode { get; set; }
+        public bool RandomParam { get; set; }
+        public bool NullParam { get; set; }
+        public bool BlankParam { get; set; }
+        public string ValueLength { get; set; }
+        public string TestName { get; set; }
+    }
+
+    public enum APIAction
+    {
+        POST,
+        PUT
+    }
+
+    public enum HTTPResponse
+    {
+        BadRequest,
+        Unauthorized,
+        NotFound,
+        OK,
+        InternalServerError
     }
 }

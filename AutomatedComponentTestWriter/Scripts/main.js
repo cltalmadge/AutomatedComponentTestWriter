@@ -32,7 +32,6 @@ function loadFileAsText() {
 function JSONtoHTMLFields() {
     console.time('jsonLoadTime');
     var theJSON = document.getElementById("JSONTextArea").value;
-
     var printError = function (error, explicit) {
         var err = `[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}`;
         $(document).ready(function () {
