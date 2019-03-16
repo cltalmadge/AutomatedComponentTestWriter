@@ -47,18 +47,21 @@ namespace AutomatedComponentTestWriter.Controllers
     class ComponentTestGenerator
     {
 
-        private CodeDomProvider test;
+        private CodeCompileUnit ComponentTest;
         
         public ComponentTestGenerator()
+        {
+            ComponentTest = new CodeCompileUnit();
+        }
+
+        public void AddGeneratedUnitTest_PropertyRequired(Property prop)
         {
 
         }
 
-        
-    }
+        public void AddGeneratedUnitTest_PropertyNotRequired(Property prop)
+        {
 
-    class UnitTest
-    {
-
+        }
     }
 }
