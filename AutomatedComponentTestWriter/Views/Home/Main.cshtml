@@ -22,6 +22,8 @@
     </table>
 </div>
 <div id="jsonErrField"></div> <!--This is where I am putting any error messages regarding JSON parsing after it is submitted to the application.-->
+
+<!--This is where I am putting the main body of the editor.-->
 @using (Html.BeginForm("ReadDTO", "Home"))
 {
 <div id="mainGUI" style="display:none">
@@ -34,7 +36,7 @@
         <label>URI/URL:</label>@Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control"}) 
         <div class="panel-body">
             <div class="scrollbar">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-striped">
                     <tr>
                         <th>Property Name</th>
                         <th>Data Type</th>
@@ -52,7 +54,7 @@
 </div>
 }
 
-<div style="display:none"><input id="holdPropertyIndex" style="visibility:hidden" value=""/></div>
+@*<div style="display:none"><input id="holdPropertyIndex" style="visibility:hidden" value=""/></div>*@
 
 <button style="display:none" id="downloadComponentTest">Download</button>
 
