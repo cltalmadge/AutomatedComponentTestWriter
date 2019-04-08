@@ -142,8 +142,7 @@
             var json = JSON.parse(theJSON);
             console.table(json);
             $(document).ready(function () {
-
-                //var index =
+                
                 var index = 0;
                 @{
                     var index = 0;
@@ -155,8 +154,9 @@
                         Model.Properties.Add(new Property());
                         index = Model.Properties.Count() - 1;
                     }
-
-                    console.log(`${index} for ${key}`);
+                    if (json[key] instanceof Object) {
+                        console.log("Is array");
+                    }
                     var indexCell = `<td style="display:none"><input name="Properties.Index" type="hidden" value="${index}" /></td>`;
                     var propertyName = `<td><label><input type="hidden" id="Properties_${index}_PropertyName" name="Properties[${index}].PropertyName" value="${key}" />${key}</label></td>`;
                     var dataType = `<td><select class="form-control" id="Properties_${index}_DataType" name="Properties[${index}].DataType">
