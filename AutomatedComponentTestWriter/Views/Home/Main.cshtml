@@ -6,20 +6,20 @@
 @using AutomatedComponentTestWriter.Models
 @model AutomatedComponentTestWriter.Models.ComponentTestDTO
 <!DOCTYPE html>
-<div class="form-group">
-    <label for="json object">Input JSON object:</label>
-    <textarea id="JSONTextArea" class="form-control" rows="10" cols="10"></textarea>
-    <table>
-        <tr>
-            <td>
-                <label id="fileLabel" class="btn btn-outline-primary" for="fileToLoad">
-                    <input type="file" id="fileToLoad" accept=".JSON" style="display:none">Browse
-                </label>
-            </td>
-            <td><button id="loadJSON" class="btn btn-primary" onclick="loadFileAsText()">Load Selected File</button></td>
-            <td><button class="btn btn-lg" onclick="JSONtoHTML()">Submit</button></td>
-        </tr>
-    </table>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Input JSON object</strong>
+    </div>
+    <div class="panel-body">
+        <textarea id="JSONTextArea" class="form-control" rows="10" cols="10"></textarea>
+    </div>
+    <div class="panel-footer">
+        <label id="fileLabel" class="btn btn-outline-primary" for="fileToLoad">
+            <input type="file" id="fileToLoad" accept=".JSON" style="float: left">
+        </label>
+        <button id="loadJSON" class="btn btn-primary" onclick="loadFileAsText()">Load Selected File</button>
+        <button class="btn btn-danger" onclick="JSONtoHTML()" style="float: right">Submit</button>
+    </div>
 </div>
 <div id="jsonErrField"></div> <!--This is where I am putting any error messages regarding JSON parsing after it is submitted to the application.-->
 
@@ -33,7 +33,7 @@
                                                     new SelectList(Enum.GetValues(typeof(APIAction))),
                                                     "Select API Action . . . ",
                                                     new { @class = "form-control"})
-        <label>URI/URL:</label>@Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control"}) 
+        <label style="width: 90%">URI/URL:</label>@Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control"}) 
         <div class="panel-body">
             <div class="scrollbar">
                 <table class="table table-bordered table-striped">
@@ -53,8 +53,6 @@
     </div>
 </div>
 }
-
-@*<div style="display:none"><input id="holdPropertyIndex" style="visibility:hidden" value=""/></div>*@
 
 <button style="display:none" id="downloadComponentTest">Download</button>
 
@@ -149,13 +147,22 @@
                 }
                 for (var key in json) {
 
-                    @* For every key:value in my json, add a new property to my list *@
+                    @* For every key:value in the json, add a new property to the list. This is done because I need to create indexes in my list to insert at in the first place. *@
                     @{
                         Model.Properties.Add(new Property());
                         index = Model.Properties.Count() - 1;
                     }
+                    var defaultValue = "";
                     if (json[key] instanceof Object) {
-                        console.log("Is array");
+                        //defaultValue =
+                        for (var property in json[key][0]) {
+                            console.log(property) // Accesses the string for the key in this json object.
+                            console.log(json[key][0][property]) // Accesses the value of the key in this json object.
+
+                            defaultValue += `{${property}:${json[key][0][property]}}`
+                        }
+                    } else {
+                        defaultValue = json[key];
                     }
                     var indexCell = `<td style="display:none"><input name="Properties.Index" type="hidden" value="${index}" /></td>`;
                     var propertyName = `<td><label><input type="hidden" id="Properties_${index}_PropertyName" name="Properties[${index}].PropertyName" value="${key}" />${key}</label></td>`;
@@ -169,8 +176,35 @@
                                         <option>Complex</option>
                                     </select></td>`;
                     var required = `<td><input type="checkbox" id="Properties_${index}_Required" name="Properties[${index}].Required" value="1" /></td>`;
-                    var defaultValue = `<td><input class="form-control" type="text" id="Properties_${index}_DefaultValue" name="Properties[${index}].DefaultValue" value="${json[key]}" /></td>`;
+                    var defaultValue = `<td><input class="form-control" type="text" id="Properties_${index}_DefaultValue" name="Properties[${index}].DefaultValue" value="${defaultValue}" /></td>`;
                     var paramMenu = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_Preferences">🖉 Edit Parameters</button>
+                                <div class="modal fade right" id="Properties_${index}_Preferences" tabindex="-1" role="dialog" aria-labelledby="Properties_${index}_PreferencesPreviewLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="Properties_${index}_ModalTitle">Preferences for Property: ${key} </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="Properties_${index}_ParameterMenu">
+                                                    <div class="panel-body">
+                                                        <table  class="table table-striped">
+                                                            <tr><th>Expected Message</th><th>HTTP Response</th><th>Random</th><th>Null</th><th>Blank</th><th>Value/Char Length</th><th>Test Name</th><th><button type="button" class="btn btn-success" onclick="addParam('Properties_${index}_ParameterTable')">+ Add Parameter</button></th></tr>
+                                                            <tbody id="Properties_${index}_ParameterTable">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div></td>`;
+                    var paramMenuComplexTypes = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_Preferences">🖉 Edit Parameters</button>
                                 <div class="modal fade right" id="Properties_${index}_Preferences" tabindex="-1" role="dialog" aria-labelledby="Properties_${index}_PreferencesPreviewLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">

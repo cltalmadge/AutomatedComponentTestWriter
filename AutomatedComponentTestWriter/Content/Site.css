@@ -20,13 +20,16 @@
 input,
 select,
 textarea {
-    max-width: 1080px;
+    max-width: 100%;
 }
 
-#JSONTextArea{
-    max-width: 1100px !important;
-    width:1100px;
-    resize:none;
+#JSONTextArea {
+    /*max-width: 100%*/
+    width: 100%;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box;
+    resize: none;
 }
 /* Set padding to display errors that occur during databinding */
 .padding-error {

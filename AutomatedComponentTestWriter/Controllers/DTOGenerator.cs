@@ -134,7 +134,8 @@ namespace AutomatedComponentTestWriter.Controllers
             return propertyField;
         }
 
-
+        // This function handles the creation of object/type classes to represent complex types.
+        // These classes are just appended to the Data Transfer Object class as of current implementation.
         private CodeSnippetTypeMember CreateComplexPropertyField(Property prop)
         {
             ComplexTypeClassGenerator complexClassGen = new ComplexTypeClassGenerator(prop.ComplexType);
