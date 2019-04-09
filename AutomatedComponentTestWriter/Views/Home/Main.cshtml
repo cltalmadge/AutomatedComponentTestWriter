@@ -33,7 +33,7 @@
                                                     new SelectList(Enum.GetValues(typeof(APIAction))),
                                                     "Select API Action . . . ",
                                                     new { @class = "form-control"})
-        <label style="width: 90%">URI/URL:</label>@Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control"}) 
+        <label>URI/URL:</label>@Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control"}) 
         <div class="panel-body">
             <div class="scrollbar">
                 <table class="table table-bordered table-striped">
@@ -99,7 +99,7 @@
                             <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_BlankParam" name="Properties[${propertyIndex}].Parameters[${index}].BlankParam" value="1" /></td>
                             <td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_ValueLength" name="Properties[${propertyIndex}].Parameters[${index}].ValueLength" /></td>
                             <td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_TestName" name="Properties[${propertyIndex}].Parameters[${index}].TestName" /></td>
-                            <td> <button type="button" class="btn btn-danger" onclick="deleteRow(this)">x</button></td>
+                            <td> <button type="button" class="btn btn-danger" onclick="deleteRow(this)">X</button></td>
                             </tr>`;
             $(`#${tagID}`).append(parameter);
         });
@@ -152,18 +152,7 @@
                         Model.Properties.Add(new Property());
                         index = Model.Properties.Count() - 1;
                     }
-                    var defaultValue = "";
-                    if (json[key] instanceof Object) {
-                        //defaultValue =
-                        for (var property in json[key][0]) {
-                            console.log(property) // Accesses the string for the key in this json object.
-                            console.log(json[key][0][property]) // Accesses the value of the key in this json object.
-
-                            defaultValue += `{${property}:${json[key][0][property]}}`
-                        }
-                    } else {
-                        defaultValue = json[key];
-                    }
+                    
                     var indexCell = `<td style="display:none"><input name="Properties.Index" type="hidden" value="${index}" /></td>`;
                     var propertyName = `<td><label><input type="hidden" id="Properties_${index}_PropertyName" name="Properties[${index}].PropertyName" value="${key}" />${key}</label></td>`;
                     var dataType = `<td><select class="form-control" id="Properties_${index}_DataType" name="Properties[${index}].DataType">
@@ -176,35 +165,20 @@
                                         <option>Complex</option>
                                     </select></td>`;
                     var required = `<td><input type="checkbox" id="Properties_${index}_Required" name="Properties[${index}].Required" value="1" /></td>`;
-                    var defaultValue = `<td><input class="form-control" type="text" id="Properties_${index}_DefaultValue" name="Properties[${index}].DefaultValue" value="${defaultValue}" /></td>`;
+
+                    var defaultValue = "";
+                    if (json[key] instanceof Object) {
+                        for (var property in json[key][0]) {
+                            console.log(property) // Accesses the string for the key in this json object.
+                            console.log(json[key][0][property]) // Accesses the value of the key in this json object.
+
+                            defaultValue += `{${property}:${json[key][0][property]}}`
+                        }
+                    } else {
+                        defaultValue = `<td><input class="form-control" type="text" id="Properties_${index}_DefaultValue" name="Properties[${index}].DefaultValue" value="${json[key]}" /></td>`;
+                    }
+
                     var paramMenu = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_Preferences">🖉 Edit Parameters</button>
-                                <div class="modal fade right" id="Properties_${index}_Preferences" tabindex="-1" role="dialog" aria-labelledby="Properties_${index}_PreferencesPreviewLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="Properties_${index}_ModalTitle">Preferences for Property: ${key} </h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div id="Properties_${index}_ParameterMenu">
-                                                    <div class="panel-body">
-                                                        <table  class="table table-striped">
-                                                            <tr><th>Expected Message</th><th>HTTP Response</th><th>Random</th><th>Null</th><th>Blank</th><th>Value/Char Length</th><th>Test Name</th><th><button type="button" class="btn btn-success" onclick="addParam('Properties_${index}_ParameterTable')">+ Add Parameter</button></th></tr>
-                                                            <tbody id="Properties_${index}_ParameterTable">
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div></td>`;
-                    var paramMenuComplexTypes = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_Preferences">🖉 Edit Parameters</button>
                                 <div class="modal fade right" id="Properties_${index}_Preferences" tabindex="-1" role="dialog" aria-labelledby="Properties_${index}_PreferencesPreviewLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
