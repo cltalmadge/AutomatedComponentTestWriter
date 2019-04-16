@@ -139,10 +139,22 @@ namespace AutomatedComponentTestWriter.Controllers
         private CodeSnippetTypeMember CreateComplexPropertyField(Property prop)
         {
             ComplexTypeClassGenerator complexClassGen = new ComplexTypeClassGenerator(prop.ComplexType);
-            CodeSnippetTypeMember complexTypeSnippet = new CodeSnippetTypeMember
+            CodeSnippetTypeMember complexTypeSnippet = null;
+
+            if (prop.Required.ToLower().Equals("true"))
             {
-                Text = "\t\tpublic " + prop.ComplexType.ObjectName + " " + prop.ComplexType.ObjectName.ToLower() + " { get; set; }"
-            };
+                complexTypeSnippet = new CodeSnippetTypeMember
+                {
+                    Text = "\t\tpublic " + prop.ComplexType.ObjectName + " " + prop.ComplexType.ObjectName.ToLower() + " { get; set; }"
+                };
+            }
+            else
+            {
+                complexTypeSnippet = new CodeSnippetTypeMember
+                {
+                    Text = "\t\tpublic System.Nullable<" + prop.ComplexType.ObjectName + "> " + prop.ComplexType.ObjectName.ToLower() + " { get; set; }"
+                };
+            }
 
             DtoNamespace.Types.Add(complexClassGen.ComplexTypeClass);
 

@@ -11,7 +11,7 @@
         <strong>Input JSON object</strong>
     </div>
     <div class="panel-body">
-        <textarea id="JSONTextArea" class="form-control" rows="10" cols="10"></textarea>
+        <textarea id="JSONTextArea" class="form-control" rows="10" cols="10" s></textarea>
     </div>
     <div class="panel-footer">
         <label id="fileLabel" class="btn btn-outline-primary" for="fileToLoad">
@@ -166,16 +166,58 @@
                                     </select></td>`;
                     var required = `<td><input type="checkbox" id="Properties_${index}_Required" name="Properties[${index}].Required" value="1" /></td>`;
 
+                    /*
+                     * There is either a textbox representing a default value or a button linked to a modal menu for complex object preferences.
+                     */
                     var defaultValue = "";
+                    var complex = false;
+                    defaultValue = `<td><input class="form-control" type="text" id="Properties_${index}_DefaultValue" name="Properties[${index}].DefaultValue" value="${json[key]}" /></td>`;
+                    var complexDefaultValue = "";
                     if (json[key] instanceof Object) {
+                        complex = true;
+                        console.log(`${key} is object`);
+                        complexDefaultValue = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_ComplexMenu">🖉 Complex Type Properties</button>
+                                <div class="modal fade right" id="Properties_${index}_ComplexMenu" tabindex="-1" role="dialog" aria-labelledby="Properties_${index}_ComplexMenuPreviewLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="Properties_${index}_ModalTitle">Complex Type Attributes for Property: ${key} </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="Properties_${index}_ComplexTypeMenu">
+                                                    <div class="panel-body">
+                                                        <table  class="table table-striped">
+                                                            <tr><th>Complex Member Name</th><th>Data Type</th><th>Complex Member Value</th></tr>
+                                                            <tbody id="Properties_${index}_ParameterTable">
+                                                            `
+                        
+
                         for (var property in json[key][0]) {
                             console.log(property) // Accesses the string for the key in this json object.
                             console.log(json[key][0][property]) // Accesses the value of the key in this json object.
-
-                            defaultValue += `{${property}:${json[key][0][property]}}`
+                            complexDefaultValue += 
+                            //defaultValue += `{${property}:${json[key][0][property]}}`
                         }
+
+                        complexDefaultValue += `</tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div></td>`;
+
+                        
+
                     } else {
-                        defaultValue = `<td><input class="form-control" type="text" id="Properties_${index}_DefaultValue" name="Properties[${index}].DefaultValue" value="${json[key]}" /></td>`;
+                       
                     }
 
                     var paramMenu = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_Preferences">🖉 Edit Parameters</button>
@@ -205,7 +247,13 @@
                                         </div>
                                     </div>
                                 </div></td>`;
-                    html += `<tr>${indexCell}${propertyName}${dataType}${required}${defaultValue}${paramMenu}</tr>`;
+
+                    if (complex) {
+                        html += `<tr>${indexCell}${propertyName}${dataType}${required}${complexDefaultValue}${paramMenu}</tr>`;
+                    } else {
+
+                        html += `<tr>${indexCell}${propertyName}${dataType}${required}${defaultValue}${paramMenu}</tr>`;
+                    }
                     index = index + 1;
                 }
                 //var html = `<tr>${propertyName}${dataType}${required}${defaultValue}${paramMenu}</tr>`
