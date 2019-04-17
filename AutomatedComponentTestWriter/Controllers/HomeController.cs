@@ -22,20 +22,14 @@ namespace AutomatedComponentTestWriter.Controllers
         {
             // TODO: Scaffold the component test with the codeDOM here?
             //ComponentTestGenerator componentTest = new ComponentTestGenerator();
-            string test = "";
-            foreach(var Property in dto.Properties)
-            {
-                // TODO: Do some processing to each attribute. Scaffold a method
-                // to be generated onto the code?
-                foreach(var Parameter in Property.Parameters)
-                {
-                    //if(!(Parameter.ExpectedMessage.Equals("")) || Parameter.ExpectedMessage != null)
-                    test += "" + Parameter.ExpectedMessage + "\n";
-                }
-            }
+            DTOGenerator dtoTemplate = new DTOGenerator(dto, dto.DTOName + ".cs");
+            ComponentTestGenerator componentTestsTemplate = new ComponentTestGenerator(dto, dto.DTOName + "Tests.cs");
+            dtoTemplate.GenerateCSharpCode();
+            componentTestsTemplate.GenerateCSharpCode();
+            //dtoTemplate.GenerateCSharpCode();
             // TODO: Return some kind of action based on processing done to DTO.
             //return Content($"1: {dto.Properties.First().PropertyName} 2: {dto.Properties[1].PropertyName} 3: {dto.Properties[2].PropertyName}");
-            return Content($"{test}");
+            return Content("Yes");
         }
 
         [HttpPost]

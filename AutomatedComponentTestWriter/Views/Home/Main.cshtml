@@ -49,7 +49,7 @@
                 </table>
             </div>
         </div>
-        <div class="panel-footer"><button type="submit" class="btn btn-success">&#9658; Run Now</button></div>
+        <div class="panel-footer"><label>DTO Name:</label><input class="form-control" type="text" name="DTOName" style="width:30%" /><button type="submit" class="btn btn-success">&#9658; Run Now</button></div>
     </div>
 </div>
 }
@@ -66,6 +66,11 @@
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
     }
+
+    function addComplexMember(htmlString) {
+
+    }
+    
     function addParam(tagID) {
         var string = "" + tagID;
         var splitTag = string.split("_");
@@ -94,9 +99,9 @@
                                 <option>OK</option>
                                 <option>InternalServerError</option>
                             </select></td>
-                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_RandomParam" name="Properties[${ propertyIndex }].Parameters[${ index }].RandomParam" value="1" /></td>
-                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_NullParam" name="Properties[${propertyIndex}].Parameters[${index }].NullParam" value="1" /></td>
-                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_BlankParam" name="Properties[${propertyIndex}].Parameters[${index}].BlankParam" value="1" /></td>
+                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_RandomParam" name="Properties[${ propertyIndex }].Parameters[${ index }].RandomParam" value="True" /></td>
+                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_NullParam" name="Properties[${propertyIndex}].Parameters[${index }].NullParam" value="True" /></td>
+                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_BlankParam" name="Properties[${propertyIndex}].Parameters[${index}].BlankParam" value="True" /></td>
                             <td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_ValueLength" name="Properties[${propertyIndex}].Parameters[${index}].ValueLength" /></td>
                             <td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_TestName" name="Properties[${propertyIndex}].Parameters[${index}].TestName" /></td>
                             <td> <button type="button" class="btn btn-danger" onclick="deleteRow(this)">X</button></td>
@@ -144,6 +149,7 @@
                 var index = 0;
                 @{
                     var index = 0;
+                    var index2 = 0;
                 }
                 for (var key in json) {
 
@@ -164,7 +170,7 @@
                                         <option>DateTime</option>
                                         <option>Complex</option>
                                     </select></td>`;
-                    var required = `<td><input type="checkbox" id="Properties_${index}_Required" name="Properties[${index}].Required" value="1" /></td>`;
+                    var required = `<td><input type="checkbox" id="Properties_${index}_Required" name="Properties[${index}].Required" value="True" /></td>`;
 
                     /*
                      * There is either a textbox representing a default value or a button linked to a modal menu for complex object preferences.
@@ -193,13 +199,31 @@
                                                             <tr><th>Complex Member Name</th><th>Data Type</th><th>Complex Member Value</th></tr>
                                                             <tbody id="Properties_${index}_ParameterTable">
                                                             `
-                        
 
+                        @{ 
+                            Model.Properties[index].ComplexType = new ComplexObject();
+                        }
+                        var index2 = 0;
                         for (var property in json[key][0]) {
+                            @{ 
+                                Model.Properties[index].ComplexType.ComplexMembers.Add(new ComplexObjectMember());
+                                index2++;
+                            }
                             console.log(property) // Accesses the string for the key in this json object.
                             console.log(json[key][0][property]) // Accesses the value of the key in this json object.
-                            complexDefaultValue += 
-                            //defaultValue += `{${property}:${json[key][0][property]}}`
+                            complexDefaultValue += `<tr><td style="display:none"><input type="hidden" name="properties[${index}].ComplexType.ComplexMembers.Index" value="${index2}"/></td>`;
+                            complexDefaultValue += `<td style="display:none"><input type="hidden" name="properties[${index}].ComplexType.ObjectName" value="${key}"/></td>`;
+                            complexDefaultValue += `<td><input class="form-control" type="text" id="Properties_${index}_ComplexType_ComplexMembers_${index2}_Key" name="Properties[${index}].ComplexType.ComplexMembers[${index2}].Key" value="${property}" /></td>`;
+                            complexDefaultValue += `<td><select class="form-control" id="Properties_${index}_DataType" name="Properties[${index}].ComplexType.ComplexMembers[${index2}].DataType">
+                                        <option>Select Type . . .</option>
+                                        <option>string</option>
+                                        <option>bool</option>
+                                        <option>int</option>
+                                        <option>decimel</option>
+                                        <option>DateTime</option>
+                                    </select></td>`;
+                            complexDefaultValue += `<td><input class="form-control" type="text" id="Properties_${index}_ComplexType_ComplexMembers_${index2}_Value" name="Properties[${index}].ComplexType.ComplexMembers[${index2}].Value" value="${json[key][0][property]}" /></td></tr>`;
+                            index2 += 1;
                         }
 
                         complexDefaultValue += `</tbody>
@@ -216,8 +240,6 @@
 
                         
 
-                    } else {
-                       
                     }
 
                     var paramMenu = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_Preferences">🖉 Edit Parameters</button>

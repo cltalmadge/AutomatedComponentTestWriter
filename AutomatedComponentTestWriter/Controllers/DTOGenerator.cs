@@ -56,11 +56,11 @@ namespace AutomatedComponentTestWriter.Controllers
         {
             CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
             CodeGeneratorOptions options = new CodeGeneratorOptions();
+            
             options.BracingStyle = "C";
             using (StreamWriter sourceWriter = new StreamWriter(fileName))
             {
-                provider.GenerateCodeFromCompileUnit(
-                    dataTransferObjectTemplate, sourceWriter, options);
+                provider.GenerateCodeFromCompileUnit(dataTransferObjectTemplate, sourceWriter, options);
             }
         }
 
@@ -143,7 +143,7 @@ namespace AutomatedComponentTestWriter.Controllers
 
             if (prop.Required.ToLower().Equals("true"))
             {
-                complexTypeSnippet = new CodeSnippetTypeMember
+                complexTypeSnippet = new CodeSnippetTypeMember()
                 {
                     Text = "\t\tpublic " + prop.ComplexType.ObjectName + " " + prop.ComplexType.ObjectName.ToLower() + " { get; set; }"
                 };

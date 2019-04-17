@@ -43,7 +43,7 @@ namespace AutomatedComponentTestWriter.Controllers
 
                 complexFieldDefaultValue = CreateDefaultValue(complexMember);
 
-                complexFieldTypeMember.Text = "\t\t public " + complexMember.DataType.ToLower() + " " + complexMember.Key + " { get; set; }";
+                complexFieldTypeMember.Text = "\t\t\tpublic " + complexMember.DataType.ToLower() + " " + complexMember.Key + " { get; set; }";
 
                 complexTypeClass.Members.Add(complexFieldDefaultValue);
                 complexTypeClass.Members.Add(complexFieldTypeMember);
@@ -57,16 +57,16 @@ namespace AutomatedComponentTestWriter.Controllers
             switch (member.DataType.ToLower())
             {
                 case "int":
-                    defaultValue.Text = "\t\t[DefaultValue(" + member.Value + ")]";
+                    defaultValue.Text = "\t\t\t[DefaultValue(" + member.Value + ")]";
                     break;
                 case "string":
-                    defaultValue.Text = "\t\t[DefaultValue(\"" + member.Value + "\")]";
+                    defaultValue.Text = "\t\t\t[DefaultValue(\"" + member.Value + "\")]";
                     break;
                 case "bool":
-                    defaultValue.Text = "\t\t[DefaultValue(" + bool.Parse(member.Value) + ")]";
+                    defaultValue.Text = "\t\t\t[DefaultValue(" + bool.Parse(member.Value) + ")]";
                     break;
                 case "decimal":
-                    defaultValue.Text = "\t\t[DefaultValue(" + decimal.Parse(member.Value) + ")]";
+                    defaultValue.Text = "\t\t\t[DefaultValue(" + decimal.Parse(member.Value) + ")]";
                     break;
                 default:
                     break;
