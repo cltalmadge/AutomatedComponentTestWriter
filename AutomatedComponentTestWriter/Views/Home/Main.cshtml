@@ -33,7 +33,7 @@
                                                     new SelectList(Enum.GetValues(typeof(APIAction))),
                                                     "Select API Action . . . ",
                                                     new { @class = "form-control"})
-        <label>URI/URL:</label>@Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control"}) 
+        <label>URI/URL:</label>@Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control" }) 
         <div class="panel-body">
             <div class="scrollbar">
                 <table class="table table-bordered table-striped">
@@ -49,7 +49,9 @@
                 </table>
             </div>
         </div>
-        <div class="panel-footer"><label>DTO Name:</label><input class="form-control" type="text" name="DTOName" style="width:30%" /><button id="runButton" type="submit" class="btn btn-success" onclick="unhideDownloads()">&#9658; Run Now</button></div>
+        <div class="panel-footer">
+            <div class="input-group"><div class="input-group-addon alert-success"><label >DTO Name:</label></div><input class="form-control" type="text" name="DTOName" style="width:30%" /><button style="float: right" id="runButton" type="submit" class="btn btn-success" onclick="unhideDownloads()">&#9658; Run Now</button></div>
+        </div>
     </div>
 </div>
 }
