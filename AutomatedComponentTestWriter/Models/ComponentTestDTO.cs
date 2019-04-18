@@ -46,8 +46,9 @@ namespace AutomatedComponentTestWriter.Models
         
         public Parameter()
         {
-            ValueLength = "";
-            BlankParam = "";
+            NullParam = "false";
+            BlankParam = "false";
+            RandomParam = "False";
             ValueLength = "";
         }
     }

@@ -48,7 +48,15 @@ namespace AutomatedComponentTestWriter.Controllers
             CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
             CodeGeneratorOptions options = new CodeGeneratorOptions();
             options.BracingStyle = "C";
-            using (StreamWriter sourceWriter = new StreamWriter(className))
+
+            // Map the relative path to the server, then check to see if a directory for created source files doesn't exist already. If it doesn't, create it. If it does, don't do anything.
+            string path = System.Web.Hosting.HostingEnvironment.MapPath("~/Generated");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            
+            using (StreamWriter sourceWriter = new StreamWriter(Path.Combine(path, className), false, System.Text.Encoding.UTF8))
             {
                 provider.GenerateCodeFromCompileUnit(
                     componentTestTemplate, sourceWriter, options);

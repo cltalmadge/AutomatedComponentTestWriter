@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
@@ -55,10 +56,16 @@ namespace AutomatedComponentTestWriter.Controllers
         public void GenerateCSharpCode()
         {
             CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
+
             CodeGeneratorOptions options = new CodeGeneratorOptions();
-            
             options.BracingStyle = "C";
-            using (StreamWriter sourceWriter = new StreamWriter(fileName))
+
+            string path = System.Web.Hosting.HostingEnvironment.MapPath("~/Generated");
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            using (StreamWriter sourceWriter = new StreamWriter(Path.Combine(path, fileName), false, System.Text.Encoding.UTF8))
             {
                 provider.GenerateCodeFromCompileUnit(dataTransferObjectTemplate, sourceWriter, options);
             }
@@ -69,7 +76,6 @@ namespace AutomatedComponentTestWriter.Controllers
             // For each property defined in our DTO, resolve the data to the CodeDOM.
             foreach (var property in dataTransferObject.Properties)
             {
-                //var propField;
                 if (property.DataType.ToLower().Equals("complex"))
                 {
                     // A complex type is a special case.
