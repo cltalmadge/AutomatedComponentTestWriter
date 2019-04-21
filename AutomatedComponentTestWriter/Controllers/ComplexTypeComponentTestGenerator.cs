@@ -113,7 +113,13 @@ namespace AutomatedComponentTestWriter.Controllers
             }
             else if (param.BlankParam.Equals("True"))
             {
-
+                foreach (ComplexObjectMember member in complex.ComplexMembers)
+                {
+                    if (param.ComplexMemberSpecifier.Equals(member.Key))
+                    {
+                        ResolveBlankValue(param, complex, member.DataType, paramUnitTest);
+                    }
+                }
             }
             else if (param.RandomParam.Equals("True"))
             {
@@ -125,6 +131,37 @@ namespace AutomatedComponentTestWriter.Controllers
                         ResolveRandomValue(param, complex, member.DataType, paramUnitTest);
                     }
                 }
+            }
+        }
+
+        private void ResolveBlankValue(Parameter param, ComplexObject complex, string dataType, CodeMemberMethod paramUnitTest)
+        {
+            CodeVariableReferenceExpression requestPropertyFieldExpression;
+
+            switch (dataType.ToLower())
+            {
+                case "string":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = string.Empty");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                case "datetime":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = DateTime.MinValue");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                case "int":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = 0");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                case "decimal":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = 0M");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                case "bool":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = null");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                default:
+                    break;
             }
         }
 
