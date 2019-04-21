@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="panel-footer">
-            <div class="input-group"><div class="input-group-addon alert-success"><label >DTO Name:</label></div><input class="form-control" type="text" name="DTOName" style="width:30%" /><button style="float: right" id="runButton" type="submit" class="btn btn-success" onclick="unhideDownloads()">&#9658; Run Now</button></div>
+            <div class="input-group"><div class="input-group-addon alert-success"><label >DTO Name:</label></div><input class="form-control" type="text" name="DTOName" style="width:30%" /><button style="float: right" id="runButton" type="submit" class="btn btn-success" >&#9658; Run Now</button></div>
         </div>
     </div>
 </div>
@@ -115,6 +115,59 @@
         console.log(numrowsintable);
     }
 
+
+    function addComplexParam(tagID, complexObject) {
+        var string = "" + tagID;
+        var splitTag = string.split("_");
+        var currentProperty = `${splitTag[0]}_${splitTag[1]}_`;
+        var numrowsintable = $(`#${tagID}`).children("tr").length;
+        var propertyIndex = splitTag[1];
+        var index = $(`#${tagID}`).children("tr").length;
+
+        var complexProperties = complexObject.split(",");
+        console.log(complexObject);
+        console.log(`Index for Property ${propertyIndex}: ${index}`);
+        
+        $(document).ready(function () {
+            postCurrentPropertyIndex(splitTag[1]);
+            @{ 
+                if(ViewBag.CurrentIndex != null)
+                {
+                    var currentPropertyIndex = ViewBag.CurrentIndex;
+                    Model.Properties[currentPropertyIndex].ComplexType.Parameters.Add(new Parameter());
+                }
+            }
+            var parameter = `<tr><td style="display:none"><input type="hidden" name="properties[${propertyIndex}].Parameters.Index" value="${index}"/></td>
+                             <td><select class="form-control" id="Property_${propertyIndex}_Param_${index}_ComplexProperty" name="Properties[${propertyIndex}].ComplexType.Parameters[${index}].ComplexMemberSpecifier"><option>Entire Type</option>`
+            var i = 0;
+            for (var string in complexProperties) {
+                // I check to see if we're not at the last result since there's a space in the string for whatever reason.
+                if (++i != complexProperties.length) {
+                    parameter += `<option>${complexProperties[string]}</option>`;
+                }
+            }
+            parameter += `</select></td><td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_Expected_Message" name="Properties[${propertyIndex}].ComplexType.Parameters[${index}].ExpectedMessage" /></td>
+                            <td><select class="form-control" id="Property_${propertyIndex}_Param_${index}_HTTPResponse" name="Properties[${propertyIndex}].ComplexType.Parameters[${index}].HTTPResponse">
+                                <option>Select . . . </option>
+                                <option>BadRequest</option>
+                                <option>Unauthorized</option>
+                                <option>NotFound</option>
+                                <option>OK</option>
+                                <option>InternalServerError</option>
+                            </select></td>
+                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_RandomParam" name="Properties[${ propertyIndex }].ComplexType.Parameters[${ index }].RandomParam" value="True" /></td>
+                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_NullParam" name="Properties[${propertyIndex}].ComplexType.Parameters[${index }].NullParam" value="True" /></td>
+                            <td><input type="checkbox" id="Properties_${propertyIndex}_Param_${index}_BlankParam" name="Properties[${propertyIndex}].ComplexType.Parameters[${index}].BlankParam" value="True" /></td>
+                            <td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_ValueLength" name="Properties[${propertyIndex}].ComplexType.Parameters[${index}].ValueLength" /></td>
+                            <td><input class="form-control" type="text" id="Property_${propertyIndex}_Param_${index}_TestName" name="Properties[${propertyIndex}].ComplexType.Parameters[${index}].TestName" /></td>
+                            <td> <button type="button" class="btn btn-danger" onclick="deleteRow(this)">X</button></td>
+                            </tr>`;
+            $(`#${tagID}`).append(parameter);
+        });
+        var numrowsintable = $(`#${tagID}`).children("tr").length;
+        console.log(numrowsintable);
+    }
+
     function postCurrentPropertyIndex(index) {
         var theData = `currentIndex=${index}`;
         $.ajax({
@@ -143,7 +196,8 @@
                 $("#jsonErrField").html(`<div class="alert alert-danger">"${err}"</div>`);
             });
         }
-            var html = "";
+        var html = "";
+        var complexParamMenu = "";
         try {
             var json = JSON.parse(theJSON);
             console.table(json);
@@ -169,7 +223,7 @@
                                         <option>string</option>
                                         <option>bool</option>
                                         <option>int</option>
-                                        <option>decimel</option>
+                                        <option>decimal</option>
                                         <option>DateTime</option>
                                         <option>Complex</option>
                                     </select></td>`;
@@ -241,8 +295,42 @@
                                     </div>
                                 </div></td>`;
 
-                        
+                        var allComplexMembers = "";
+                        var i = 0;
+                        for (var property in json[key][0]) {
+                            if (++i == json[key][0].length)
+                                allComplexMembers += `${property}`;
+                            else
+                                allComplexMembers += `${property},`;
+                        }
 
+                        complexParamMenu = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_ComplexPreferences">🖉 Edit Parameters</button>
+                                <div class="modal fade right" id="Properties_${index}_ComplexPreferences" tabindex="-1" role="dialog" aria-labelledby="Properties_${index}_ComplexPreferencesPreviewLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="Properties_${index}_ModalTitle">Preferences for complex type: ${key} </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="Properties_${index}_ParameterMenu">
+                                                    <div class="panel-body">
+                                                        <table  class="table table-striped">
+                                                            <tr><th>Complex Type Member</th><th>Expected Message</th><th>HTTP Response</th><th>Random</th><th>Null</th><th>Blank</th><th>Value/Char Length</th><th>Test Name</th><th><button type="button" class="btn btn-success" onclick="addComplexParam('Properties_${index}_ComplexParameterTable', '${allComplexMembers}')">+ Add Parameter</button></th></tr>
+                                                            <tbody id="Properties_${index}_ComplexParameterTable">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div></td>`;
                     }
 
                     var paramMenu = `<td><button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#Properties_${index}_Preferences">🖉 Edit Parameters</button>
@@ -274,7 +362,7 @@
                                 </div></td>`;
 
                     if (complex) {
-                        html += `<tr>${indexCell}${propertyName}${dataType}${required}${complexDefaultValue}${paramMenu}</tr>`;
+                        html += `<tr>${indexCell}${propertyName}${dataType}${required}${complexDefaultValue}${complexParamMenu}</tr>`;
                     } else {
 
                         html += `<tr>${indexCell}${propertyName}${dataType}${required}${defaultValue}${paramMenu}</tr>`;

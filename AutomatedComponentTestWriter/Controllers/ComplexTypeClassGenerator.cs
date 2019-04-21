@@ -37,41 +37,40 @@ namespace AutomatedComponentTestWriter.Controllers
                 complexField.Name = complexMember.Key;
                 complexField.Attributes = MemberAttributes.Public;
 
-
                 CodeSnippetTypeMember complexFieldTypeMember = new CodeSnippetTypeMember();
-                CodeSnippetTypeMember complexFieldDefaultValue = new CodeSnippetTypeMember();
-
-                complexFieldDefaultValue = CreateDefaultValue(complexMember);
-
-                complexFieldTypeMember.Text = "\t\t\tpublic " + complexMember.DataType.ToLower() + " " + complexMember.Key + " { get; set; }";
-
-                complexTypeClass.Members.Add(complexFieldDefaultValue);
+                complexFieldTypeMember.Text = "\t\t\tpublic " + complexMember.DataType.ToLower() + " " + complexMember.Key + " { get; set; } = " + DefaultValue(complexMember) + ";";
                 complexTypeClass.Members.Add(complexFieldTypeMember);
             }
         }
 
-        private CodeSnippetTypeMember CreateDefaultValue(ComplexObjectMember member)
+        private string DefaultValue(ComplexObjectMember member)
         {
-            CodeSnippetTypeMember defaultValue = new CodeSnippetTypeMember();
-
+            string defaultValue = "";
             switch (member.DataType.ToLower())
             {
-                case "int":
-                    defaultValue.Text = "\t\t\t[DefaultValue(" + member.Value + ")]";
-                    break;
                 case "string":
-                    defaultValue.Text = "\t\t\t[DefaultValue(\"" + member.Value + "\")]";
+                    defaultValue = "\"" + member.Value + "\"";
                     break;
                 case "bool":
-                    defaultValue.Text = "\t\t\t[DefaultValue(" + bool.Parse(member.Value) + ")]";
+                    if (member.Value.ToLower().Equals("True"))
+                    {
+                        defaultValue = "true";
+                    }
+                    else
+                    {
+                        defaultValue = "false";
+                    }
+                    defaultValue = "\"" + member.Value + "\"";
+                    break;
+                case "int":
+                    defaultValue = member.Value;
                     break;
                 case "decimal":
-                    defaultValue.Text = "\t\t\t[DefaultValue(" + decimal.Parse(member.Value) + ")]";
+                    defaultValue = member.Value;
                     break;
                 default:
                     break;
             }
-
             return defaultValue;
         }
     }

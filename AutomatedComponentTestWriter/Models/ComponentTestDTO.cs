@@ -36,6 +36,7 @@ namespace AutomatedComponentTestWriter.Models
 
     public class Parameter
     {
+        public string ComplexMemberSpecifier { get; set; }
         public string ExpectedMessage { get; set; }
         public string HTTPResponse { get; set; }
         public string RandomParam { get; set; }
@@ -46,10 +47,11 @@ namespace AutomatedComponentTestWriter.Models
         
         public Parameter()
         {
+            ComplexMemberSpecifier = "";
             NullParam = "false";
             BlankParam = "false";
             RandomParam = "False";
-            ValueLength = "";
+            ValueLength = "0";
         }
     }
 
@@ -57,10 +59,12 @@ namespace AutomatedComponentTestWriter.Models
     {
         public string ObjectName { get; set; }
         public List<ComplexObjectMember> ComplexMembers { get; set; }
+        public List<Parameter> Parameters { get; set; }
 
         public ComplexObject()
         {
             ComplexMembers = new List<ComplexObjectMember>();
+            Parameters = new List<Parameter>();
         }
     }
 

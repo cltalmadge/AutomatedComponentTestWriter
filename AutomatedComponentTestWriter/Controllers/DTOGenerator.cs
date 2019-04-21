@@ -109,10 +109,7 @@ namespace AutomatedComponentTestWriter.Controllers
                 }
                 else
                 {
-                    CodeSnippetTypeMember defaultValueSnippet = CreateDefaultValue(prop);
-                    dataTransferObjectClass.Members.Add(defaultValueSnippet);
-
-                    propertyField.Text = "\t\tpublic " + prop.DataType.ToLower() + " " + prop.PropertyName + " { get; set; }\n";
+                    propertyField.Text = "\t\tpublic " + prop.DataType.ToLower() + " " + prop.PropertyName + " { get; set; } = " + DefaultValue(prop) + ";\n";
                 }
             }
             else
@@ -131,13 +128,44 @@ namespace AutomatedComponentTestWriter.Controllers
                 }
                 else
                 {
-                    CodeSnippetTypeMember defaultValueSnippet = CreateDefaultValue(prop);
-                    dataTransferObjectClass.Members.Add(defaultValueSnippet);
+                    //CodeSnippetTypeMember defaultValueSnippet = CreateDefaultValue(prop);
+                    //dataTransferObjectClass.Members.Add(defaultValueSnippet);
 
-                    propertyField.Text = "\t\tpublic System.Nullable<" + prop.DataType.ToLower() + "> " + prop.PropertyName + " { get; set; }\n";
+                    propertyField.Text = "\t\tpublic System.Nullable<" + prop.DataType.ToLower() + "> " + prop.PropertyName + " { get; set; } = " + DefaultValue(prop) + ";\n";
                 }
             }
             return propertyField;
+        }
+
+        private string DefaultValue(Property prop)
+        {
+            string defaultValue = "";
+            switch(prop.DataType.ToLower())
+            {
+                case "string":
+                    defaultValue = "\"" + prop.DefaultValue + "\"";
+                    break;
+                case "bool":
+                    if (prop.DefaultValue.ToLower().Equals("True"))
+                    {
+                        defaultValue = "true";
+                    }
+                    else
+                    {
+                        defaultValue = "false";
+                    }
+                    defaultValue = "\"" + prop.DefaultValue + "\"";
+                    break;
+                case "int":
+                    defaultValue = prop.DefaultValue;
+                    break;
+                case "decimal":
+                    defaultValue = prop.DefaultValue;
+                    break;
+                default:
+                    break;
+            }
+            return defaultValue;
         }
 
         // This function handles the creation of object/type classes to represent complex types.
@@ -165,31 +193,6 @@ namespace AutomatedComponentTestWriter.Controllers
             DtoNamespace.Types.Add(complexClassGen.ComplexTypeClass);
 
             return complexTypeSnippet;
-        }
-
-        private CodeSnippetTypeMember CreateDefaultValue(Property prop)
-        {
-            CodeSnippetTypeMember defaultValue = new CodeSnippetTypeMember();
-
-            switch (prop.DataType.ToLower())
-            {
-                case "int":
-                    defaultValue.Text = "\t\t[DefaultValue(" + prop.DefaultValue + ")]";
-                    break;
-                case "string":
-                    defaultValue.Text = "\t\t[DefaultValue(\"" + prop.DefaultValue + "\")]";
-                    break;
-                case "bool":
-                    defaultValue.Text = "\t\t[DefaultValue(" + bool.Parse(prop.DefaultValue) + ")]";
-                    break;
-                case "decimal":
-                    defaultValue.Text = "\t\t[DefaultValue(" + decimal.Parse(prop.DefaultValue) + ")]";
-                    break;
-                default:
-                    break;
-            }
-
-            return defaultValue;
         }
     }
 }

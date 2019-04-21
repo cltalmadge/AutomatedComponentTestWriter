@@ -27,7 +27,7 @@ namespace AutomatedComponentTestWriter.Controllers
             //ComponentTestGenerator componentTest = new ComponentTestGenerator();
             DTOGenerator dtoTemplate = new DTOGenerator(dto, dto.DTOName + ".cs");
             ComponentTestGenerator componentTestsTemplate = new ComponentTestGenerator(dto, dto.DTOName + "Tests.cs");
-            
+
             string path = System.Web.Hosting.HostingEnvironment.MapPath(@"~/Generated");
 
             System.IO.DirectoryInfo dirInfo = new DirectoryInfo(path);
