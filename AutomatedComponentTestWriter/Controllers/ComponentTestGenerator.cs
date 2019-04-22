@@ -149,7 +149,7 @@ namespace AutomatedComponentTestWriter.Controllers
             paramUnitTest.Statements.Add(guidstringStatement);
 
             // Assert that the guidstring contains the expected error message.
-            CodeVariableReferenceExpression assertIsTrueExpression = new CodeVariableReferenceExpression("Assert.IsTrue(guidstring.Contains(" + param.ExpectedMessage + "))");
+            CodeVariableReferenceExpression assertIsTrueExpression = new CodeVariableReferenceExpression("Assert.IsTrue(guidstring.Contains(@\"" + param.ExpectedMessage + "\"))");
             paramUnitTest.Statements.Add(assertIsTrueExpression);
 
             componentTestClass.Members.Add(paramUnitTest);
@@ -164,11 +164,42 @@ namespace AutomatedComponentTestWriter.Controllers
             }
             else if (param.BlankParam.Equals("True"))
             {
-
+                ResolveBlankValue(param, prop, paramUnitTest);
             }
             else if (param.RandomParam.Equals("True"))
             {
                 ResolveRandomValue(param, prop, paramUnitTest);
+            }
+        }
+
+        private void ResolveBlankValue(Parameter param, Property prop, CodeMemberMethod paramUnitTest)
+        {
+            CodeVariableReferenceExpression requestPropertyFieldExpression;
+
+            switch (prop.DataType.ToLower())
+            {
+                case "string":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + "." + param.ComplexMemberSpecifier + " = string.Empty");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                case "datetime":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + "." + param.ComplexMemberSpecifier + " = DateTime.MinValue");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                case "int":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + "." + param.ComplexMemberSpecifier + " = 0");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                case "decimal":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + "." + param.ComplexMemberSpecifier + " = 0M");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                case "bool":
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + "." + param.ComplexMemberSpecifier + " = null");
+                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    break;
+                default:
+                    break;
             }
         }
 

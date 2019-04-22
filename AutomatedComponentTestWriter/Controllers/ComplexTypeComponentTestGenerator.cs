@@ -90,7 +90,7 @@ namespace AutomatedComponentTestWriter.Controllers
             paramUnitTest.Statements.Add(guidstringStatement);
 
             // Assert that the guidstring contains the expected error message.
-            CodeVariableReferenceExpression assertIsTrueExpression = new CodeVariableReferenceExpression("Assert.IsTrue(guidstring.Contains(\"" + param.ExpectedMessage + "\"))");
+            CodeVariableReferenceExpression assertIsTrueExpression = new CodeVariableReferenceExpression("Assert.IsTrue(guidstring.Contains(@\"" + param.ExpectedMessage + "\"))");
             paramUnitTest.Statements.Add(assertIsTrueExpression);
 
             testSuite.Members.Add(paramUnitTest);
