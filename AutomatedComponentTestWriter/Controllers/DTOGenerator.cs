@@ -53,6 +53,7 @@ namespace AutomatedComponentTestWriter.Controllers
             AddPropertiesToDTOClass();
         }
 
+        // This function generates the source file.
         public void GenerateCSharpCode()
         {
             CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
@@ -71,9 +72,10 @@ namespace AutomatedComponentTestWriter.Controllers
             }
         }
 
+        // This function is a higher level abstraction to handle the logic of deciding if a property is a "simple" type or a complex type.
         private void AddPropertiesToDTOClass()
         {
-            // For each property defined in our DTO, resolve the data to the CodeDOM.
+            // For each property defined in our DTO, create a CodeSnippetField by calling smaller functions.
             foreach (var property in dataTransferObject.Properties)
             {
                 if (property.DataType.ToLower().Equals("complex"))
@@ -91,10 +93,12 @@ namespace AutomatedComponentTestWriter.Controllers
             dataTransferObjectNamespace.Types.Add(dataTransferObjectClass);
         }
 
+        //This function handles code snippets for "simple" types.
         private CodeSnippetTypeMember CreatePropertyField(Property prop)
         {
             CodeSnippetTypeMember propertyField = new CodeSnippetTypeMember();
 
+            // A property is either required and thus not able to be set to null or it is not required, and is thus set to System.Nullable<T>.
             if (prop.Required.Equals("True"))
             {
                 if (prop.DataType.ToLower().Equals("datetime"))
@@ -128,22 +132,22 @@ namespace AutomatedComponentTestWriter.Controllers
                 }
                 else
                 {
-                    //CodeSnippetTypeMember defaultValueSnippet = CreateDefaultValue(prop);
-                    //dataTransferObjectClass.Members.Add(defaultValueSnippet);
-
                     propertyField.Text = "\t\tpublic System.Nullable<" + prop.DataType.ToLower() + "> " + prop.PropertyName + " { get; set; } = " + DefaultValue(prop) + ";\n";
                 }
             }
+
             return propertyField;
         }
 
+        // This handles the assignment of default values to properties.
         private string DefaultValue(Property prop)
         {
-            string defaultValue = "";
+            string defaultValue = ""; 
+
             switch(prop.DataType.ToLower())
             {
                 case "string":
-                    defaultValue = "\"" + prop.DefaultValue + "\"";
+                    defaultValue = "@\"" + prop.DefaultValue + "\"";
                     break;
                 case "bool":
                     if (prop.DefaultValue.ToLower().Equals("True"))

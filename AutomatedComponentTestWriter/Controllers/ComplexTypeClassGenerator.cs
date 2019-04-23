@@ -27,22 +27,19 @@ namespace AutomatedComponentTestWriter.Controllers
 
         private void CreateComplexObjectClass()
         {
-
+            // Sets the name of the class, makes the class public.
             complexTypeClass.Name = complexType.ObjectName;
             complexTypeClass.Attributes = MemberAttributes.Public;
-            CodeMemberField complexField = new CodeMemberField();
-
+            
             foreach (ComplexObjectMember complexMember in complexType.ComplexMembers)
             {
-                complexField.Name = complexMember.Key;
-                complexField.Attributes = MemberAttributes.Public;
-
                 CodeSnippetTypeMember complexFieldTypeMember = new CodeSnippetTypeMember();
                 complexFieldTypeMember.Text = "\t\t\tpublic " + complexMember.DataType.ToLower() + " " + complexMember.Key + " { get; set; } = " + DefaultValue(complexMember) + ";";
                 complexTypeClass.Members.Add(complexFieldTypeMember);
             }
         }
 
+        // Function that handles the assignment of default values to complex type members.
         private string DefaultValue(ComplexObjectMember member)
         {
             string defaultValue = "";

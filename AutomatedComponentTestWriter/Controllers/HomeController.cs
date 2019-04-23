@@ -13,7 +13,6 @@ namespace AutomatedComponentTestWriter.Controllers
 {
     public class HomeController : Controller
     {
-        private ComponentTestDTO dataTransferObject;
         public ActionResult Main()
         {
             ComponentTestDTO dto = new ComponentTestDTO();
@@ -23,8 +22,6 @@ namespace AutomatedComponentTestWriter.Controllers
         [HttpPost]
         public ActionResult ReadDTO(ComponentTestDTO dto)
         {
-            //TODO: Scaffold the component test with the codeDOM here?
-            //ComponentTestGenerator componentTest = new ComponentTestGenerator();
             DTOGenerator dtoTemplate = new DTOGenerator(dto, dto.DTOName + ".cs");
             ComponentTestGenerator componentTestsTemplate = new ComponentTestGenerator(dto, dto.DTOName + "Tests.cs");
 
@@ -39,18 +36,16 @@ namespace AutomatedComponentTestWriter.Controllers
                 }
             }
 
+            // Generate the code for the client.
             dtoTemplate.GenerateCSharpCode();
             componentTestsTemplate.GenerateCSharpCode();
 
-            //Response.Clear();
-            //Response.AddHeader("Content-Disposition", "attatchment;filename=\"" + dto.DTOName + ".cs\"");
-            //Response.WriteFile(path + @"\" + dto.DTOName + ".cs");
+            // If the directory for storing generated code doesn't exist yet, create it.
             string pathForZips = System.Web.Hosting.HostingEnvironment.MapPath(@"~/GeneratedCode");
             if(!Directory.Exists(pathForZips))
             {
                 Directory.CreateDirectory(pathForZips);
             }
-
             
             string path2 = pathForZips + @"/" + dto.DTOName + "Archive";
 
@@ -64,12 +59,17 @@ namespace AutomatedComponentTestWriter.Controllers
                     file.Delete();
                 }
             }
+
+            // Creates the archive to send to the client.
             ZipFile.CreateFromDirectory(path, path2 + ".zip");
             
+            // Clear the response header and then send the zip to the client.
             Response.Clear();
             Response.AddHeader("Content-Disposition", "attatchment;filename=\"" + dto.DTOName + "Archive.zip\"");
             Response.WriteFile(path2 + ".zip");
-            return Content("OK");
+
+
+            return Content(HTTPResponse.OK + ": Success");
         }
 
         [HttpPost]

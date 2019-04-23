@@ -211,7 +211,7 @@ namespace AutomatedComponentTestWriter.Controllers
                 case "string":
 
                     // If no value length was assigned by the user, we pass "0", which means it creates strings of various random lengths instead of random strings of fixed length.
-                    if (param.ValueLength.Equals(""))
+                    if (param.ValueLength == null)
                     {
                         requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = \"" + CreateRandomString(0) + "\"");
                         paramUnitTest.Statements.Add(requestPropertyFieldExpression);
@@ -281,7 +281,7 @@ namespace AutomatedComponentTestWriter.Controllers
             if (valueLength == 0)
             {
                 // Just an arbitrary placeholder to deal with empty value length fields.
-                valueLength = random.Next();
+                valueLength = random.Next(0, 255);
             }
 
             string allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
