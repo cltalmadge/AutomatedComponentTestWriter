@@ -77,8 +77,8 @@ namespace AutomatedComponentTestWriter.Models
 
     public enum APIAction
     {
-        POST,
-        PUT
+        Post,
+        Put
     }
 
     public enum HTTPResponse

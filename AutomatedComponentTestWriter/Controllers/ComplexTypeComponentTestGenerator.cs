@@ -67,7 +67,7 @@ namespace AutomatedComponentTestWriter.Controllers
             SetDTOPropertyNameValue(param, complex, paramUnitTest);
 
             // Create the response message then add it to the DOM graph. This is an await action that posts to the api endpoint.
-            CodeSnippetExpression responseExpression = new CodeSnippetExpression("await ApiActions.Post(_uri, request).ConfigureAwait(false)");
+            CodeSnippetExpression responseExpression = new CodeSnippetExpression("await ApiActions." + dto.APIAction + "(_uri, request).ConfigureAwait(false)");
             CodeVariableDeclarationStatement responseStatement = new CodeVariableDeclarationStatement("var", "response", responseExpression);
             paramUnitTest.Statements.Add(responseStatement);
 
