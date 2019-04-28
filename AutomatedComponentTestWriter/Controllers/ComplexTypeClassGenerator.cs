@@ -34,7 +34,7 @@ namespace AutomatedComponentTestWriter.Controllers
             foreach (ComplexObjectMember complexMember in complexType.ComplexMembers)
             {
                 CodeSnippetTypeMember complexFieldTypeMember = new CodeSnippetTypeMember();
-                complexFieldTypeMember.Text = "\t\t\tpublic " + complexMember.DataType.ToLower() + " " + complexMember.Key + " { get; set; } = " + DefaultValue(complexMember) + ";";
+                complexFieldTypeMember.Text = "\t\t\tpublic " + complexMember.DataType + " " + complexMember.Key + " { get; set; } = " + DefaultValue(complexMember) + ";";
                 complexTypeClass.Members.Add(complexFieldTypeMember);
             }
         }
@@ -61,6 +61,9 @@ namespace AutomatedComponentTestWriter.Controllers
                     break;
                 case "int":
                     defaultValue = member.Value;
+                    break;
+                case "datetime":
+                    defaultValue = "\"" + DateTime.Parse(member.Value) + "\"";
                     break;
                 case "decimal":
                     defaultValue = member.Value;

@@ -14,9 +14,9 @@
         <textarea id="JSONTextArea" class="form-control" rows="10" cols="10" s></textarea>
     </div>
     <div class="card-footer">
-        <div class="input-group" style="float:left; width:50vh">
+        <div class="input-group" style="float:left; width:60vh">
             <div class="input-group-prepend">
-                <button id="loadJSON" class="btn btn-primary" onclick="loadFileAsText()">Load Selected File</button>
+                <button id="loadJSON" style="width:10vw" class="btn btn-primary" onclick="loadFileAsText()">Upload</button>
             </div>
             <div class="custom-file">
                 <input type="file" class="custom-file-input" accept=".JSON" id="fileToLoad" aria-describedby="inputGroupFileAddon01">
@@ -34,7 +34,7 @@
 <div id="mainGUI" style="display:none">
     <div class="card card-default">
         <div class="card-header"><strong>Object Details</strong></div>
-        <div class="input-group" style="width:98.8%; margin-left:7px; margin-top:8px">
+        <div class="input-group" style="width:98.3%; margin-left:7px; margin-top:8px">
             <div class="input-group-prepend">
                 <span class="input-group-text">API Action:</span>
             </div>
@@ -42,11 +42,11 @@
                 new SelectList(Enum.GetValues(typeof(APIAction))),
                         new { @class = "form-control"})
         </div>
-        <div class="input-group" style="width:98.8%; margin-left:8px; margin-top:8px">
-            <div class="input-group-append">
-                <span class="input-group-text ">URI/URL:</span>
+        <div class="input-group" style="width:98.3%; margin-left:8px; margin-top:8px">
+            <div class="input-group-prepend">
+                <span class="input-group-text">URI/URL:</span>
             </div>
-            @Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control input" })
+            @Html.TextBoxFor(model => model.APIEndpointURL, new { @class = "form-control" })
         </div>
         <div class="card-body scrollbar" style="max-height:35vh; margin-top:5px">
             @*<div class="scrollbar">*@
@@ -297,13 +297,13 @@
                             console.log(json[key][0][property]) // Accesses the value of the key in this json object.
                             complexDefaultValue += `<tr><td style="display:none"><input type="hidden" name="properties[${index}].ComplexType.ComplexMembers.Index" value="${index2}"/></td>`;
                             complexDefaultValue += `<td style="display:none"><input type="hidden" name="properties[${index}].ComplexType.ObjectName" value="${key}"/></td>`;
-                            complexDefaultValue += `<td><input class="form-control" type="text" id="Properties_${index}_ComplexType_ComplexMembers_${index2}_Key" name="Properties[${index}].ComplexType.ComplexMembers[${index2}].Key" value="${property}" /></td>`;
+                            complexDefaultValue += `<td><label><input type="hidden" id="Properties_${index}_ComplexType_ComplexMembers_${index2}_Key" name="Properties[${index}].ComplexType.ComplexMembers[${index2}].Key" value="${property}" />${property}</label></td>`;
                             complexDefaultValue += `<td><select class="form-control" id="Properties_${index}_DataType" name="Properties[${index}].ComplexType.ComplexMembers[${index2}].DataType">
                                         <option>Select Type . . .</option>
                                         <option>string</option>
                                         <option>bool</option>
                                         <option>int</option>
-                                        <option>decimel</option>
+                                        <option>decimal</option>
                                         <option>DateTime</option>
                                     </select></td>`;
                             complexDefaultValue += `<td><input class="form-control" type="text" id="Properties_${index}_ComplexType_ComplexMembers_${index2}_Value" name="Properties[${index}].ComplexType.ComplexMembers[${index2}].Value" value="${json[key][0][property]}" /></td></tr>`;

@@ -173,7 +173,7 @@ namespace AutomatedComponentTestWriter.Controllers
                 case "string":
 
                     // If no value length was assigned by the user, we pass "0", which means it creates strings of various random lengths instead of random strings of fixed length.
-                    if (param.ValueLength.Equals(""))
+                    if (param.ValueLength == null)
                     {
                         requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = \"" + CreateRandomString(0) + "\"");
                         paramUnitTest.Statements.Add(requestPropertyFieldExpression);
@@ -185,8 +185,16 @@ namespace AutomatedComponentTestWriter.Controllers
                     }
                     break;
                 case "decimal":
-                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = " + CreateRandomDecimal() + "M");
-                    paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    if (param.ValueLength == null)
+                    {
+                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = " + CreateRandomDecimal(0) + "M");
+                        paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    }
+                    else
+                    {
+                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = " + CreateRandomDecimal(int.Parse(param.ValueLength)) + "M");
+                        paramUnitTest.Statements.Add(requestPropertyFieldExpression);
+                    }
                     break;
                 case "datetime":
                     requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = DateTime.Parse(\"" + CreateRandomDate() + "\")");
@@ -194,7 +202,7 @@ namespace AutomatedComponentTestWriter.Controllers
                     break;
                 case "int":
 
-                    if (param.ValueLength.Equals(""))
+                    if (param.ValueLength == null)
                     {
                         requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + complex.ObjectName + "." + param.ComplexMemberSpecifier + " = " + CreateRandomIntegerOfLength(0));
                         paramUnitTest.Statements.Add(requestPropertyFieldExpression);
@@ -227,12 +235,44 @@ namespace AutomatedComponentTestWriter.Controllers
             }
         }
 
-        private string CreateRandomDecimal()
+        /* Functions for handling the creation of random values of various types. */
+        private string CreateRandomDecimal(int valueLength)
         {
             double randomValue = random.NextDouble();
             decimal theDecimal = (decimal)randomValue;
 
-            string decimalString = theDecimal.ToString();
+            // A list of allowed characters.
+            string allowed = "0123456789";
+
+            // We want an integer of a specific "length."
+            if (valueLength == 0)
+            {
+                valueLength = random.Next(0, 29); // If no value length specified, just create a random integer.
+            }
+
+            if (valueLength > 29)
+            {
+                valueLength = 29; // To avoid creating integers larger than int32 can store.
+            }
+
+            var stringChars = new char[valueLength];
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = allowed[random.Next(allowed.Length)];
+            }
+
+            // Pick a random spot in the array of characters to replace with a period/dot.
+            int randomIndex = random.Next(stringChars.Length - 1);
+
+            // Don't let it pick the last index of the decimal for dot placement to prevent it from generating buggy code.
+            if (randomIndex == stringChars.Length)
+                randomIndex = stringChars.Length - 1;
+            
+            // Just picks a random index of the decimal number and replaces it with a period.
+            stringChars[randomIndex] = '.';
+
+            string decimalString = new string(stringChars);
             return decimalString;
         }
 
@@ -242,7 +282,7 @@ namespace AutomatedComponentTestWriter.Controllers
             if (valueLength == 0)
             {
                 // Just an arbitrary placeholder to deal with empty value length fields.
-                valueLength = random.Next();
+                valueLength = random.Next(0, 30);
             }
 
             string allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

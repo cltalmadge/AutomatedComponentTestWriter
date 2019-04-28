@@ -150,7 +150,7 @@ namespace AutomatedComponentTestWriter.Controllers
                     defaultValue = "@\"" + prop.DefaultValue + "\"";
                     break;
                 case "bool":
-                    if (prop.DefaultValue.ToLower().Equals("True"))
+                    if (prop.DefaultValue.ToLower().Equals("true"))
                     {
                         defaultValue = "true";
                     }
@@ -158,7 +158,7 @@ namespace AutomatedComponentTestWriter.Controllers
                     {
                         defaultValue = "false";
                     }
-                    defaultValue = "\"" + prop.DefaultValue + "\"";
+                    defaultValue = prop.DefaultValue.ToLower();
                     break;
                 case "int":
                     defaultValue = prop.DefaultValue;
