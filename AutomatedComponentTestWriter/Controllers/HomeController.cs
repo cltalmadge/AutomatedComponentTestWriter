@@ -51,7 +51,7 @@ namespace AutomatedComponentTestWriter.Controllers
 
             System.IO.DirectoryInfo dirInfo2 = new DirectoryInfo(pathForZips);
 
-            // Get rid of old archives
+            // Get rid of old archives since they are no longer needed.
             foreach (FileInfo file in dirInfo2.GetFiles())
             {
                 if (file.Extension.Equals(".zip"))
@@ -68,8 +68,8 @@ namespace AutomatedComponentTestWriter.Controllers
             Response.AddHeader("Content-Disposition", "attatchment;filename=\"" + dto.DTOName + "Archive.zip\"");
             Response.WriteFile(path2 + ".zip");
 
-
-            return Content(HTTPResponse.OK + ": Success");
+            
+            return Content("Success");
         }
 
         [HttpPost]
