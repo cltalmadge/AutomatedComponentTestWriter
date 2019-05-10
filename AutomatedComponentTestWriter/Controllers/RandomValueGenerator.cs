@@ -7,10 +7,10 @@ namespace AutomatedComponentTestWriter.Controllers
 {
     public class RandomValueGenerator
     {
-        private string CreateRandomDecimal(int valueLength)
+        Random random = new Random();
+        public string CreateRandomDecimal(int valueLength)
         {
             double randomValue = random.NextDouble();
-            decimal theDecimal = (decimal)randomValue;
 
             // A list of allowed characters.
             string allowed = "0123456789";
@@ -47,7 +47,7 @@ namespace AutomatedComponentTestWriter.Controllers
             return decimalString;
         }
 
-        private string CreateRandomString(int valueLength)
+        public string CreateRandomString(int valueLength)
         {
             // A list of allowed characters.
             if (valueLength == 0)
@@ -68,7 +68,7 @@ namespace AutomatedComponentTestWriter.Controllers
             return new string(stringChars);
         }
 
-        private int CreateRandomIntegerOfLength(int valueLength)
+        public int CreateRandomIntegerOfLength(int valueLength)
         {
             // A list of allowed characters.
             string allowed = "0123456789";
@@ -94,7 +94,7 @@ namespace AutomatedComponentTestWriter.Controllers
             return int.Parse(new string(stringChars));
         }
 
-        private string CreateRandomDate()
+        public string CreateRandomDate()
         {
             DateTime start = new DateTime(1995, 1, 1);
 
@@ -103,6 +103,4 @@ namespace AutomatedComponentTestWriter.Controllers
             return start.AddDays(random.Next(range)).ToString();
         }
     }
-
-
 }

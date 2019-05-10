@@ -13,6 +13,7 @@ namespace AutomatedComponentTestWriter.Controllers
     class ComponentTestGenerator
     {
         private Random random = new Random();
+        private RandomValueGenerator randomValue = new RandomValueGenerator();
         private ComponentTestDTO dto;
 
         // CodeDOM objects
@@ -205,6 +206,15 @@ namespace AutomatedComponentTestWriter.Controllers
 
         private void ResolveRandomValue(Parameter param, Property prop, CodeMemberMethod paramUnitTest)
         {
+            int valLength;
+            try
+            {
+                valLength = int.Parse(param.ValueLength);
+            }
+            catch (Exception)
+            {
+                valLength = 0;
+            }
             CodeVariableReferenceExpression requestPropertyFieldExpression;
             switch (prop.DataType.ToLower())
             {
@@ -213,42 +223,42 @@ namespace AutomatedComponentTestWriter.Controllers
                     // If no value length was assigned by the user, we pass "0", which means it creates strings of various random lengths instead of random strings of fixed length.
                     if (param.ValueLength == null)
                     {
-                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = @\"" + CreateRandomString(0) + "\"");
+                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = @\"" + randomValue.CreateRandomString(0) + "\"");
                         paramUnitTest.Statements.Add(requestPropertyFieldExpression);
                     }
                     else
                     {
-                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = @\"" + CreateRandomString(int.Parse(param.ValueLength)) + "\"");
+                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = @\"" + randomValue.CreateRandomString(valLength) + "\"");
                         paramUnitTest.Statements.Add(requestPropertyFieldExpression);
                     }
                     break;
                 case "decimal":
                     if(param.ValueLength == null)
                     {
-                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = " + CreateRandomDecimal(0) + "M");
+                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = " + randomValue.CreateRandomDecimal(0) + "M");
                         paramUnitTest.Statements.Add(requestPropertyFieldExpression);
                     }
                     else
                     {
-                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = " + CreateRandomDecimal(int.Parse(param.ValueLength)) + "M");
+                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = " + randomValue.CreateRandomDecimal(valLength) + "M");
                         paramUnitTest.Statements.Add(requestPropertyFieldExpression);
                     }
 
                     break;
                 case "datetime":
-                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = DateTime.Parse(\"" + CreateRandomDate() + "\")");
+                    requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = DateTime.Parse(\"" + randomValue.CreateRandomDate() + "\")");
                     paramUnitTest.Statements.Add(requestPropertyFieldExpression);
                     break;
                 case "int":
 
                     if (param.ValueLength == null)
                     {
-                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = " + CreateRandomIntegerOfLength(0));
+                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = " + randomValue.CreateRandomIntegerOfLength(0));
                         paramUnitTest.Statements.Add(requestPropertyFieldExpression);
                     }
                     else
                     {
-                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = " + CreateRandomIntegerOfLength(int.Parse(param.ValueLength)));
+                        requestPropertyFieldExpression = new CodeVariableReferenceExpression(dto.DTOName + "." + prop.PropertyName + " = " + randomValue.CreateRandomIntegerOfLength(valLength));
                         paramUnitTest.Statements.Add(requestPropertyFieldExpression);
                     }
                     break;
@@ -272,100 +282,6 @@ namespace AutomatedComponentTestWriter.Controllers
                 default:
                     break;
             }
-        }
-        
-        /* Functions for handling the creation of random values of various types. */
-        private string CreateRandomDecimal(int valueLength)
-        {
-            double randomValue = random.NextDouble();
-            decimal theDecimal = (decimal)randomValue;
-
-            // A list of allowed characters.
-            string allowed = "0123456789";
-
-            // We want an integer of a specific "length."
-            if (valueLength == 0)
-            {
-                valueLength = random.Next(0, 29); // If no value length specified, just create a random integer.
-            }
-
-            if (valueLength > 29)
-            {
-                valueLength = 29; // To avoid creating integers larger than int32 can store.
-            }
-
-            var stringChars = new char[valueLength];
-
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = allowed[random.Next(allowed.Length)];
-            }
-
-
-            stringChars[random.Next(stringChars.Length)] = '.';
-
-            string decimalString = new string(stringChars);
-            return decimalString;
-        }
-
-        private string CreateRandomString(int valueLength)
-        {
-            // If no value length is specified, just create a string of arbitrary length.
-            if (valueLength == 0)
-            {
-                // Just an arbitrary placeholder to deal with empty value length fields.
-                valueLength = random.Next(0, 30);
-            }
-
-            // A string of allowed characters.
-            string allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-            // An array of characters that is used to store randomly selected characters from the string containing allowed characters.
-            var stringChars = new char[valueLength];
-
-            // For the length of the array of stringCharacters, 
-            // populate the array with characters at randomly selected indices from the string containing allowed characters.
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = allowed[random.Next(allowed.Length)];
-            }
-
-            return new string(stringChars);
-        }
-
-        private int CreateRandomIntegerOfLength(int valueLength)
-        {
-            // A list of allowed characters.
-            string allowed = "0123456789";
-
-            // We want an integer of a specific "length."
-            if (valueLength == 0)
-            {
-                return random.Next(); // If no value length specified, just create a random integer.
-            }
-
-            if (valueLength > 9)
-            {
-                valueLength = 9; // To avoid creating integers larger than int32 can store.
-            }
-
-            var stringChars = new char[valueLength];
-
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = allowed[random.Next(allowed.Length)];
-            }
-
-            return int.Parse(new string(stringChars));
-        }
-
-        private string CreateRandomDate()
-        {
-            DateTime start = new DateTime(1995, 1, 1);
-
-            int range = (DateTime.Today - start).Days;
-
-            return start.AddDays(random.Next(range)).ToString();
         }
     }
 }
